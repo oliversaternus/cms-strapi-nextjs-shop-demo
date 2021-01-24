@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_integrations_google_analytics",
+  "info": {
+    "name": "Google Analytics",
+    "icon": "search",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "GATrackingID": {
+      "type": "string"
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "cookieValue": {
+      "type": "string"
+    },
+    "anonymousTracking": {
+      "type": "boolean"
+    }
+  }
+}

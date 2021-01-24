@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_integrations_chats",
+  "info": {
+    "name": "Chat",
+    "icon": "grin-alt",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "TawkToID": {
+      "type": "string"
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "cookieValue": {
+      "type": "string"
+    }
+  }
+}
