@@ -267,3 +267,26 @@ export type Integrations = {
         enabled?: boolean;
     }
 }
+
+export type Product = {
+    id: number;
+    name: string;
+    description: string;
+    image: Image;
+    price: number;
+};
+
+export type CartItem = {
+    id: string;
+    product: Product;
+    quantity: number;
+};
+
+export type ProductQuery = {
+    price_gte?: number;
+    price_lte?: number
+    _q?: string;
+    _sort?: string;
+    _limit?: number;
+    _start?: number;
+};

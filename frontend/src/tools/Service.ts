@@ -1,4 +1,4 @@
-import { Post, PostQuery, Response, Page, Message, GlobalData, Integrations, CookieConfig } from './Models';
+import { Post, PostQuery, Response, Page, Message, GlobalData, Integrations, CookieConfig, Product, ProductQuery } from './Models';
 import { stringify } from 'qs';
 
 export const apiBaseUrl = 'http://localhost:1337';
@@ -58,4 +58,18 @@ export const getCookieConfig = async (): Promise<Response<CookieConfig>> => {
 
 export const createMessage = async (message: Message): Promise<Response<Page>> => {
     return await invokeApi('/messages', '', 'POST', { ...message }, true);
+};
+
+export const getProduct = async (id: number): Promise<Response<Product>> => {
+    return await invokeApi(`/products/${id}`, '', 'GET', undefined, true);
+};
+
+export const getProducts = async (query: ProductQuery): Promise<Response<Product[]>> => {
+    const _query = stringify(query);
+    return await invokeApi(`/products${_query ? `?${_query}` : ''}`, '', 'GET', undefined, true);
+};
+
+export const countProducts = async (query: ProductQuery): Promise<Response<number>> => {
+    const _query = stringify(query);
+    return await invokeApi(`/products/count${_query ? `?${_query}` : ''}`, '', 'GET', undefined, true);
 };
