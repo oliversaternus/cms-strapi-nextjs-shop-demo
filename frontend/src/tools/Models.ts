@@ -129,6 +129,22 @@ export type ImageFormat = {
     url: string;
 };
 
+export type File = {
+    id: number;
+    name: string;
+    alternativeText: string;
+    caption: string;
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    provider: string;
+    provider_metadata?: string;
+    created_at: string;
+    updated_at: string;
+};
+
 export interface Response<T> {
     status: number;
     isError: boolean;
@@ -270,10 +286,13 @@ export type Integrations = {
 
 export type Product = {
     id: number;
-    name: string;
-    description: string;
-    image: Image;
-    price: number;
+    name?: string;
+    description?: string;
+    image?: Image;
+    price?: number;
+    images?: Image[];
+    availible?: boolean;
+    documents?: File[];
 };
 
 export type CartItem = {
