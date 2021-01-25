@@ -10,6 +10,7 @@ import { CircularProgress } from '@material-ui/core';
 import cookies from 'next-cookies';
 import CookieMessage from '../src/components/CookieMessage';
 import { CookieContextProvider, AcceptCookieType } from '../src/contexts/CookieContext';
+import { CartContextProvider } from '../src/contexts/CartContext';
 import Analytics, { ReactGA } from '../src/tools/Analytics';
 import Chat from '../src/tools/Chat';
 import '../styles.css';
@@ -112,41 +113,43 @@ function CustomApp(props: ExtendedAppProps) {
         <CssBaseline />
         <CookieContextProvider initialValue={initialCookies} session={documentCookies.sessionId}>
           <NotificationContextProvider>
-            {integrations.Analytics?.enabled &&
-              <Analytics
-                trackingID={integrations.Analytics.GATrackingID}
-                cookieValue={integrations.Analytics.cookieValue}
+            <CartContextProvider>
+              {integrations.Analytics?.enabled &&
+                <Analytics
+                  trackingID={integrations.Analytics.GATrackingID}
+                  cookieValue={integrations.Analytics.cookieValue}
+                />
+              }
+              {integrations.Chat?.enabled &&
+                <Chat
+                  tawkToID={integrations.Chat.TawkToID}
+                  cookieValue={integrations.Chat.cookieValue}
+                />
+              }
+              {isLoading &&
+                <div
+                  className="loading-overlay"
+                  style={{ background: theme.palette.backgrounds.main }}
+                >
+                  <CircularProgress color='secondary' />
+                </div>
+              }
+              {(!initialCookies || initialCookies?.none === true) &&
+                cookieConfig.enabled &&
+                <CookieMessage {...cookieConfig} />
+              }
+              <Navigation
+                logoSrc={logo?.url}
+                links={navigation}
               />
-            }
-            {integrations.Chat?.enabled &&
-              <Chat
-                tawkToID={integrations.Chat.TawkToID}
-                cookieValue={integrations.Chat.cookieValue}
+              <Component {...pageProps} />
+              <Footer
+                logoSrc={logo?.url}
+                columns={footer}
+                copyright={copyright}
               />
-            }
-            {isLoading &&
-              <div
-                className="loading-overlay"
-                style={{ background: theme.palette.backgrounds.main }}
-              >
-                <CircularProgress color='secondary' />
-              </div>
-            }
-            {(!initialCookies || initialCookies?.none === true) &&
-              cookieConfig.enabled &&
-              <CookieMessage {...cookieConfig} />
-            }
-            <Navigation
-              logoSrc={logo?.url}
-              links={navigation}
-            />
-            <Component {...pageProps} />
-            <Footer
-              logoSrc={logo?.url}
-              columns={footer}
-              copyright={copyright}
-            />
-            <base target='_blank'></base>
+              <base target='_blank'></base>
+            </CartContextProvider>
           </NotificationContextProvider>
         </CookieContextProvider>
       </ThemeProvider>

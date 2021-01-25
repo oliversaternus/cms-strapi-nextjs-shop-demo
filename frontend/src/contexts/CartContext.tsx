@@ -20,39 +20,75 @@ export const CartContext = React.createContext<{
 export const CartContextProvider: React.FC<{}> = ({ children }) => {
     const [items, setItems] = useState<CartItem[]>([]);
 
-    const totalPrice = useMemo(() => 0, [items]);
+    const loadItems = useCallback<() => CartItem[] | undefined>(() => {
+        if (window && window.localStorage) {
+            let _items = undefined;
+            try {
+                _items = JSON.parse(window.localStorage.getItem('cart') || '');
+            } catch (e) {
+                _items = undefined;
+            }
+            if (Array.isArray(_items)) {
+                return _items;
+            }
+        }
+    }, []);
+
+    const saveItems = useCallback((_items) => {
+        if (window && window.localStorage) {
+            window.localStorage.setItem('cart', JSON.stringify(_items));
+        }
+    }, []);
+
+    const totalPrice = useMemo(() => {
+        let sum = 0;
+        for (const item of items) {
+            sum += (item.product?.price || 0);
+        }
+        return sum;
+    }, [items]);
 
     const setQuantity = useCallback((cartId: string, quantity: number) => {
-        const updated = [...items];
-        const foundIndex = updated.findIndex((item) => item.id === cartId);
+        const _items = loadItems() || [...items];
+        const foundIndex = _items.findIndex((item) => item.id === cartId);
         if (foundIndex !== -1) {
-            updated[foundIndex].quantity = quantity;
-            setItems([...updated]);
+            _items[foundIndex].quantity = quantity;
+            saveItems(_items);
+            setItems(_items);
         }
     }, [items]);
 
     const addToCart = useCallback((product: Product) => {
-        const id = randomHex(12);
-        const foundIndex = items.findIndex((item) => item.product?.id === product.id);
+        const _items = loadItems() || [...items];
+        const foundIndex = _items.findIndex((item) => item.product?.id === product.id);
         if (foundIndex !== -1) {
-            setQuantity(items[foundIndex].id, items[foundIndex].quantity + 1);
+            _items[foundIndex].quantity += 1;
+            saveItems(_items);
+            setItems(_items);
             return;
         }
         const cartItem: CartItem = {
-            id,
+            id: randomHex(12),
             product,
             quantity: 1
         };
-        setItems([...items, cartItem]);
+        setItems([..._items, cartItem]);
     }, [items]);
 
-    const removeFromCart = (cartId: string) => {
-
-    };
+    const removeFromCart = useCallback((cartId: string) => {
+        const _items = loadItems() || [...items];
+        const foundIndex = _items.findIndex((item) => item.id === cartId);
+        if (foundIndex !== -1) {
+            _items.splice(foundIndex, 1);
+            saveItems(_items);
+            setItems(_items);
+        }
+    }, [items]);
 
     useEffect(
         () => {
-            // initialize
+            const _items = loadItems() || [];
+            setItems(_items);
         }, []
     );
 

@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { createStyles, makeStyles, withStyles } from '@material-ui/core/styles';
 import { IconButton, useMediaQuery, Theme, MenuItem } from '@material-ui/core';
-import { Menu as MenuIcon, ArrowDropDown } from '@material-ui/icons';
+import { Menu as MenuIcon, ArrowDropDown, ShoppingCart } from '@material-ui/icons';
 import Link from 'next/link';
 import clsx from 'clsx';
 import Dialog from './styledComponents/StyledDialog';
@@ -16,6 +16,8 @@ import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandIcon from '@material-ui/icons/ArrowDropDown';
 import Typography from '@material-ui/core/Typography';
+import { CartContext } from '../contexts/CartContext';
+import Badge from '@material-ui/core/Badge';
 
 const Accordion = withStyles({
     root: {
@@ -203,6 +205,11 @@ const useStyles = makeStyles((theme: Theme) =>
         menuLink: {
             margin: 0
         },
+        cartIcon: {
+            fill: theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
+            height: 32,
+            width: 32
+        },
         linkMenuButton: {
             cursor: 'pointer',
             marginBottom: 0,
@@ -244,6 +251,7 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
     const [selectedLinkId, setSelectedLinkId] = useState<number>();
     const [selectedAccordionLinkId, setSelectedAccordionLinkId] = useState<number>();
     const linkMenuRefs = useRef<Array<HTMLButtonElement | null>>([]);
+    const { items: cartItems } = useContext(CartContext);
 
     useEffect(() => {
         setScrollTop(window.scrollY);
@@ -326,6 +334,11 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
                                 <a target="_self" className={clsx(classes.link, transparent && !isScrolled && classes.transparentLink)}>{link.title}</a>
                             </Link>
                         )}
+                        <IconButton>
+                            <Badge badgeContent={cartItems.length} color="secondary">
+                                <ShoppingCart className={classes.cartIcon} />
+                            </Badge>
+                        </IconButton>
                     </div>
                 </div>
             </div>
