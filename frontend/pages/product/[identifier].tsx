@@ -1,8 +1,8 @@
 import React, { useMemo, useEffect, useContext } from 'react';
 import { NextPage } from 'next';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { getPost } from '../../src/tools/Service';
-import { Post } from '../../src/tools/Models';
+import { getProduct } from '../../src/tools/Service';
+import { Product } from '../../src/tools/Models';
 import { parse } from 'marked';
 import { CircularProgress, Avatar } from '@material-ui/core';
 import { useRouter } from 'next/router';
@@ -80,6 +80,75 @@ const useStyles = makeStyles((theme: Theme) =>
         authorName: {
             marginLeft: 4
         },
+        details: {
+            '& h1': {
+                paddingTop: 6,
+                paddingBottom: 6,
+                margin: 0,
+                fontSize: 32,
+                fontWeight: 500,
+                lineHeight: 1.2,
+                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary
+            },
+            '& h2': {
+                paddingTop: 6,
+                paddingBottom: 6,
+                margin: 0,
+                fontSize: 32,
+                fontWeight: 500,
+                lineHeight: 1.2,
+                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary
+            },
+            '& h3': {
+                paddingTop: 6,
+                paddingBottom: 6,
+                margin: 0,
+                fontSize: 32,
+                fontWeight: 500,
+                lineHeight: 1.2,
+                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary
+            },
+            '& h4': {
+                paddingTop: 6,
+                paddingBottom: 6,
+                margin: 0,
+                fontSize: 32,
+                fontWeight: 500,
+                lineHeight: 1.2,
+                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary
+            },
+            '& h5': {
+                paddingTop: 6,
+                paddingBottom: 6,
+                margin: 0,
+                fontSize: 32,
+                fontWeight: 500,
+                lineHeight: 1.2,
+                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary
+            },
+            '& p': {
+                margin: 0,
+                fontSize: 16,
+                fontWeight: 300,
+                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary
+            },
+            '& ul': {
+                margin: 0,
+                paddingBottom: 32,
+                fontSize: 16,
+                fontWeight: 300,
+                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary,
+                paddingLeft: 18
+            },
+            '& ol': {
+                margin: 0,
+                paddingBottom: 32,
+                fontWeight: 300,
+                fontSize: 16,
+                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary,
+                paddingLeft: 18
+            }
+        },
         '@media (max-width: 800px)': {
             titleContainer: {
                 width: '100%',
@@ -96,21 +165,21 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const PostPage: NextPage<{ post: Post }> = ({ post }) => {
-    const { content, image, title, subtitle, author, topic, duration } = post;
+const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
+    const { id, name, description, image, price, images, availible, documents, details } = product;
     const classes = useStyles();
-    const parsedContent = useMemo(() => parse(content || ''), [content]);
+    const parsedContent = useMemo(() => parse(details || ''), [details]);
     const { openNotification } = useContext(NotificationContext);
     const router = useRouter();
 
     useEffect(() => {
-        if (title === '__empty' && content === '__empty') {
-            openNotification('error', 'Post not found.');
-            router.replace('/blog');
+        if (id === 0 && name === '__empty') {
+            openNotification('error', 'Product not found.');
+            router.replace('/');
         }
-    }, [title, content]);
+    }, [id, name]);
 
-    if (title === '__empty' && content === '__empty') {
+    if (id === 0 && name === '__empty') {
         return (
             <div className="loading-overlay">
                 <CircularProgress color="secondary" />
@@ -121,53 +190,18 @@ const PostPage: NextPage<{ post: Post }> = ({ post }) => {
     return (
         <div className={classes.root}>
             <div className={classes.header}>
-                <div className={classes.titleContainer}>
-                    <div className={classes.meta}>
-                        <div className={classes.topic}>
-                            {(topic || '').toUpperCase()}
-                        </div>
-                        <div className={classes.divider}>|</div>
-                        <div className={classes.duration}>
-                            {duration + ' MIN. LESEDAUER'}
-                        </div>
-                    </div>
-                    <div className={classes.title}>
-                        {`${title}${subtitle ? ` - ${subtitle}` : ''}`}
-                    </div>
-                    {author && <div className={classes.author}>
-                        <div className={classes.avatarContainer}>
-                            <Avatar
-                                alt={author.name}
-                                src={author.image?.formats?.thumbnail?.url}
-                                className={classes.avatar}
-                            />
-                        </div>
-                        <div>
-                            <div style={{ display: 'flex' }}>
-                                <div>Verfasst von</div>
-                                <div className={classes.authorName}>{author.name}</div>
-                            </div>
-                            {author.twitter &&
-                                <a
-                                    href={`https://twitter.com/${author.twitter}`}
-                                >{`@${author.twitter}`}
-                                </a>
-                            }
-                        </div>
-                    </div>}
-                </div>
                 {image && <Image className={classes.image} src={image?.url || ''} previewUrl={image?.previewUrl} />}
             </div>
-            <div className={'blog-page'} dangerouslySetInnerHTML={{ __html: parsedContent }} />
+            <div className={classes.details} dangerouslySetInnerHTML={{ __html: parsedContent }} />
         </div>
     );
 }
 
-PostPage.getInitialProps = async ({ query }): Promise<{ post: Post }> => {
-    const postResponse = await getPost(query.identifier + '');
-    const post: Post = (!postResponse.isError && postResponse.data) || { content: '__empty', title: '__empty' } as Post;
+ProductPage.getInitialProps = async ({ query }): Promise<{ product: Product }> => {
+    const productResponse = await getProduct(Number(query.identifier));
+    const product: Product = (!productResponse.isError && productResponse.data) || { id: 0, name: '__empty' } as Product;
 
-    return { post };
+    return { product };
 }
 
-export default PostPage;
+export default ProductPage;

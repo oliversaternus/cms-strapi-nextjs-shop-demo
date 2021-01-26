@@ -14,8 +14,8 @@ import { CartContextProvider } from '../src/contexts/CartContext';
 import Analytics, { ReactGA } from '../src/tools/Analytics';
 import Chat from '../src/tools/Chat';
 import '../styles.css';
-import { getCookieConfig, getGlobalData, getIntegrations } from '../src/tools/Service';
-import { CookieConfig, GlobalData, Integrations } from '../src/tools/Models';
+import { getCookieConfig, getGlobalData, getIntegrations, getProducts } from '../src/tools/Service';
+import { CookieConfig, GlobalData, Integrations, Product } from '../src/tools/Models';
 import Navigation from '../src/components/Navigation';
 import Footer from '../src/components/Footer';
 
@@ -160,13 +160,30 @@ function CustomApp(props: ExtendedAppProps) {
 CustomApp.getInitialProps = async (appContext: AppContext): Promise<{ documentCookies: Record<string, string | undefined>, pageProps: any, globalData: GlobalData, integrations: Integrations, cookieConfig: CookieConfig }> => {
   const documentCookies = cookies(appContext.ctx) || {};
   const appProps = await App.getInitialProps(appContext);
-  const responses = await Promise.all([getGlobalData(), getIntegrations(), getCookieConfig()]);
+  const responses = await Promise.all([getGlobalData(), getIntegrations(), getCookieConfig(), getProducts({ _sort: 'name:DESC' })]);
   const globalResponse = responses[0];
   const integrationsResponse = responses[1];
   const cookieConfigResponse = responses[2];
+  const productsResponse = responses[3];
   const globalData: GlobalData = (!globalResponse.isError && globalResponse.data) || {};
   const integrations: Integrations = (!integrationsResponse.isError && integrationsResponse.data) || {};
   const cookieConfig: CookieConfig = (!cookieConfigResponse.isError && cookieConfigResponse.data) || {};
+  const products: Product[] = (!productsResponse.isError && productsResponse.data) || [];
+  if (globalData && products.length) {
+    const maxId = globalData.navigation?.map(item => item.id).sort((a, b) => b - a)?.[0];
+    globalData.navigation = [
+      {
+        id: (maxId || 9999) + 1,
+        title: 'Products',
+        links: products.map(product => ({
+          id: product.id,
+          link: product.name || '',
+          path: '/product/' + product.id
+        })).filter(link => link.id && link.link && link.path)
+      },
+      ...(globalData.navigation || [])
+    ]
+  }
   return { documentCookies, globalData, integrations, cookieConfig, ...appProps };
 }
 

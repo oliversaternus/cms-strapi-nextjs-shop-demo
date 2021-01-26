@@ -291,6 +291,7 @@ export type Product = {
     image?: Image;
     price?: number;
     images?: Image[];
+    details?: string;
     availible?: boolean;
     documents?: File[];
 };
