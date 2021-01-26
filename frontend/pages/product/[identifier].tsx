@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useContext } from 'react';
+import React, { useMemo, useEffect, useContext, useCallback } from 'react';
 import { NextPage } from 'next';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { getProduct } from '../../src/tools/Service';
@@ -8,6 +8,8 @@ import { CircularProgress, Avatar } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { NotificationContext } from '../../src/contexts/NotificationContext';
 import Image from '../../src/components/styledComponents/StyledImage';
+import Button from '../../src/components/styledComponents/StyledButton';
+import { CartContext } from '../../src/contexts/CartContext';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -21,13 +23,14 @@ const useStyles = makeStyles((theme: Theme) =>
         header: {
             width: '100%',
             height: 340,
-            paddingLeft: 32,
-            paddingRight: 32,
+            padding: 32,
             maxWidth: 1080,
             display: 'flex',
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
+            minHeight: '60vh',
         },
         titleContainer: {
+            paddingLeft: 32,
             fontSize: 32,
             width: '40%',
             paddingRight: 16,
@@ -36,49 +39,20 @@ const useStyles = makeStyles((theme: Theme) =>
         title: {
             fontSize: 32
         },
-        meta: {
+        description: {
             paddingTop: 24,
             paddingBottom: 24,
-            fontSize: 16,
-            position: 'relative',
-            display: 'flex'
+            fontSize: 16
         },
-        topic: {
-            fontWeight: 600,
+        price: {
+            paddingTop: 8,
+            paddingBottom: 8,
+            fontSize: 24
         },
-        divider: {
-            paddingLeft: 4,
-            paddingRight: 4
-        },
-        duration: {},
         image: {
             width: '60%',
             minWidth: 240,
             minHeight: 160
-        },
-        author: {
-            fontSize: 18,
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingTop: 32
-        },
-        avatarContainer: {
-            width: 48,
-            height: 48,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 24,
-            marginRight: 12,
-            border: `2px solid ${theme.palette.primary.main}`
-        },
-        avatar: {
-            width: 40,
-            height: 40
-        },
-        authorName: {
-            marginLeft: 4
         },
         details: {
             '& h1': {
@@ -170,7 +144,14 @@ const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
     const classes = useStyles();
     const parsedContent = useMemo(() => parse(details || ''), [details]);
     const { openNotification } = useContext(NotificationContext);
+    const { addToCart } = useContext(CartContext);
     const router = useRouter();
+
+    const handleAddToCart = useCallback(() => {
+        addToCart(product);
+    }, [addToCart]);
+
+    const formattedPrice = useMemo(() => ((price || price === 0) && new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(price)), [price]);
 
     useEffect(() => {
         if (id === 0 && name === '__empty') {
@@ -191,6 +172,20 @@ const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
         <div className={classes.root}>
             <div className={classes.header}>
                 {image && <Image className={classes.image} src={image?.url || ''} previewUrl={image?.previewUrl} />}
+                <div className={classes.titleContainer}>
+                    <div className={classes.title}>
+                        {name}
+                    </div>
+                    <div className={classes.description}>
+                        {description}
+                    </div>
+                    <div className={classes.price}>
+                        {formattedPrice}
+                    </div>
+                    <Button onClick={handleAddToCart} _color='primary'>
+                        Add to Cart
+                    </Button>
+                </div>
             </div>
             <div className={classes.details} dangerouslySetInnerHTML={{ __html: parsedContent }} />
         </div>
