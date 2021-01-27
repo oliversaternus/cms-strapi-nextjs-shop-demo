@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import { createStyles, makeStyles, withStyles, fade } from '@material-ui/core/styles';
-import { IconButton, useMediaQuery, Theme, MenuItem, Avatar } from '@material-ui/core';
-import { Menu as MenuIcon, ArrowDropDown, ShoppingCart } from '@material-ui/icons';
+import React, { useState, useEffect, useRef } from 'react';
+import { createStyles, makeStyles, withStyles } from '@material-ui/core/styles';
+import { IconButton, useMediaQuery, Theme, MenuItem } from '@material-ui/core';
+import { Menu as MenuIcon, ArrowDropDown } from '@material-ui/icons';
 import Link from 'next/link';
 import clsx from 'clsx';
 import Dialog from './styledComponents/StyledDialog';
@@ -16,10 +16,7 @@ import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandIcon from '@material-ui/icons/ArrowDropDown';
 import Typography from '@material-ui/core/Typography';
-import { CartContext } from '../contexts/CartContext';
-import Badge from '@material-ui/core/Badge';
-import Button from '@material-ui/core/Button';
-import { formatCurrency } from '../tools/Utils';
+import CartMenu from './shop/CartMenu';
 
 const Accordion = withStyles({
     root: {
@@ -207,64 +204,6 @@ const useStyles = makeStyles((theme: Theme) =>
         menuLink: {
             margin: 0
         },
-        cartIcon: {
-            fill: theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
-            height: 32,
-            width: 32
-        },
-        cartPaper: {
-            overflow: 'hidden'
-        },
-        cartPaperContent: {
-            maxWidth: 320
-        },
-        cartTitle: {
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 16,
-            color: theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
-            fontSize: 16,
-            fontWeight: 600,
-            borderBottom: `1px solid ${fade(theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary, 0.2)}`,
-            marginBottom: 6
-        },
-        cartItemContainer: {
-            display: 'flex',
-            maxWidth: 320,
-            padding: 6,
-            paddingRight: 48
-        },
-        cartItemImage: {
-            margin: 12
-        },
-        cartItemDetails: {
-            paddingLeft: 6
-        },
-        cartItemTitle: {
-            color: theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
-            fontSize: 16,
-            fontWeight: 600,
-            paddingBotom: 6
-        },
-        cartItemPrice: {
-            color: theme.palette.componentStyles.navigation?.main.textStrong || theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
-            fontSize: 16,
-            fontWeight: 500,
-            paddingBotom: 6
-        },
-        cartItemQuantity: {
-            color: theme.palette.componentStyles.navigation?.main.textLight || theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
-            fontSize: 14,
-            fontWeight: 400
-        },
-        checkoutButton: {
-            borderRadius: 0,
-            paddingTop: 12,
-            paddingBottom: 12,
-            marginTop: 6
-        },
         linkMenuButton: {
             cursor: 'pointer',
             marginBottom: 0,
@@ -306,9 +245,6 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
     const [selectedLinkId, setSelectedLinkId] = useState<number>();
     const [selectedAccordionLinkId, setSelectedAccordionLinkId] = useState<number>();
     const linkMenuRefs = useRef<Array<HTMLButtonElement | null>>([]);
-    const cartMenuRef = useRef<HTMLButtonElement>(null);
-    const [cartMenuOpen, setCartMenuOpen] = useState(false);
-    const { items: cartItems, totalQuantity } = useContext(CartContext);
 
     useEffect(() => {
         setScrollTop(window.scrollY);
@@ -332,15 +268,6 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
             return;
         }
         setSelectedAccordionLinkId(linkId);
-    };
-
-    const handleCartOpen = () => {
-        setCartMenuOpen(true);
-    };
-
-    const handleCartClose = () => {
-        console.log('clicked away');
-        setCartMenuOpen(false);
     };
 
     return (
@@ -400,49 +327,7 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
                                 <a target="_self" className={clsx(classes.link, transparent && !isScrolled && classes.transparentLink)}>{link.title}</a>
                             </Link>
                         )}
-                        <IconButton ref={cartMenuRef} onClick={handleCartOpen}>
-                            <Badge badgeContent={totalQuantity} color="secondary">
-                                <ShoppingCart className={classes.cartIcon} />
-                            </Badge>
-                        </IconButton>
-                        <Popper open={cartMenuOpen} anchorEl={cartMenuRef.current} role={undefined} transition disablePortal>
-                            {({ TransitionProps, placement }) => (
-                                <Fade
-                                    {...TransitionProps}
-                                    style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                                >
-                                    <Paper elevation={4} className={classes.cartPaper}>
-                                        <ClickAwayListener onClickAway={handleCartClose}>
-                                            <div className={classes.cartPaperContent}>
-                                                <div className={classes.cartTitle}>Shopping Cart</div>
-                                                {cartItems.map(cartItem => (
-                                                    <div key={cartItem.id} className={classes.cartItemContainer}>
-                                                        <Avatar
-                                                            className={classes.cartItemImage}
-                                                            src={cartItem.product.image?.formats.thumbnail.url + ''}
-                                                        />
-                                                        <div className={classes.cartItemDetails}>
-                                                            <div className={classes.cartItemTitle}>
-                                                                {cartItem.product.name}
-                                                            </div>
-                                                            <div className={classes.cartItemPrice}>
-                                                                {formatCurrency(cartItem.product.price)}
-                                                            </div>
-                                                            <div className={classes.cartItemQuantity}>
-                                                                {`Quantity: ${cartItem.quantity}`}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                                <Link href="/cart">
-                                                    <Button className={classes.checkoutButton} variant="contained" fullWidth color='primary' onClick={handleCartClose}>Checkout</Button>
-                                                </Link>
-                                            </div>
-                                        </ClickAwayListener>
-                                    </Paper>
-                                </Fade>
-                            )}
-                        </Popper>
+                        <CartMenu cartURL="/cart" />
                     </div>
                 </div>
             </div>
