@@ -5,6 +5,7 @@ import { Product, CartItem } from '../tools/Models';
 export const CartContext = React.createContext<{
     items: CartItem[];
     totalPrice: number;
+    totalQuantity: number;
     addToCart: (product: Product) => void;
     removeFromCart: (cartId: string) => void;
     setQuantity: (cartId: string, quantity: number) => void;
@@ -12,6 +13,7 @@ export const CartContext = React.createContext<{
     {
         items: [],
         totalPrice: 0,
+        totalQuantity: 0,
         addToCart: () => undefined,
         removeFromCart: () => undefined,
         setQuantity: () => undefined
@@ -44,6 +46,14 @@ export const CartContextProvider: React.FC<{}> = ({ children }) => {
         let sum = 0;
         for (const item of items) {
             sum += (item.product?.price || 0);
+        }
+        return sum;
+    }, [items]);
+
+    const totalQuantity = useMemo(() => {
+        let sum = 0;
+        for (const item of items) {
+            sum += (item.quantity || 0);
         }
         return sum;
     }, [items]);
@@ -95,7 +105,7 @@ export const CartContextProvider: React.FC<{}> = ({ children }) => {
     );
 
     return (
-        <CartContext.Provider value={{ items, totalPrice, addToCart, removeFromCart, setQuantity }}>
+        <CartContext.Provider value={{ items, totalPrice, totalQuantity, addToCart, removeFromCart, setQuantity }}>
             {children}
         </CartContext.Provider>
     );

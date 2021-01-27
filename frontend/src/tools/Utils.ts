@@ -9,3 +9,5 @@ export const shallowMerge: <T>(input: { [key: string]: any }, mergeObject: { [ke
 };
 
 export const randomHex = (size: number) => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+
+export const formatCurrency = (amount?: number) => amount ? new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(amount) : undefined;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { createStyles, makeStyles, withStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles, withStyles, fade } from '@material-ui/core/styles';
 import { IconButton, useMediaQuery, Theme, MenuItem, Avatar } from '@material-ui/core';
 import { Menu as MenuIcon, ArrowDropDown, ShoppingCart } from '@material-ui/icons';
 import Link from 'next/link';
@@ -18,7 +18,8 @@ import ExpandIcon from '@material-ui/icons/ArrowDropDown';
 import Typography from '@material-ui/core/Typography';
 import { CartContext } from '../contexts/CartContext';
 import Badge from '@material-ui/core/Badge';
-import Button from './styledComponents/StyledButton';
+import Button from '@material-ui/core/Button';
+import { formatCurrency } from '../tools/Utils';
 
 const Accordion = withStyles({
     root: {
@@ -149,7 +150,7 @@ const useStyles = makeStyles((theme: Theme) =>
             alignItems: 'center',
             fontSize: 16,
             margin: 12,
-            fontWeight: 300,
+            fontWeight: 400,
             color: theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
             transition: 'color 0.16s linear',
             userSelect: 'none',
@@ -211,13 +212,58 @@ const useStyles = makeStyles((theme: Theme) =>
             height: 32,
             width: 32
         },
+        cartPaper: {
+            overflow: 'hidden'
+        },
+        cartPaperContent: {
+            maxWidth: 320
+        },
+        cartTitle: {
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 16,
+            color: theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
+            fontSize: 16,
+            fontWeight: 600,
+            borderBottom: `1px solid ${fade(theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary, 0.2)}`,
+            marginBottom: 6
+        },
         cartItemContainer: {
             display: 'flex',
-            width: 240,
-            maxWidth: 240
+            maxWidth: 320,
+            padding: 6,
+            paddingRight: 48
         },
-        cartItemCell: {
-            padding: 24
+        cartItemImage: {
+            margin: 12
+        },
+        cartItemDetails: {
+            paddingLeft: 6
+        },
+        cartItemTitle: {
+            color: theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
+            fontSize: 16,
+            fontWeight: 600,
+            paddingBotom: 6
+        },
+        cartItemPrice: {
+            color: theme.palette.componentStyles.navigation?.main.textStrong || theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
+            fontSize: 16,
+            fontWeight: 500,
+            paddingBotom: 6
+        },
+        cartItemQuantity: {
+            color: theme.palette.componentStyles.navigation?.main.textLight || theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
+            fontSize: 14,
+            fontWeight: 400
+        },
+        checkoutButton: {
+            borderRadius: 0,
+            paddingTop: 12,
+            paddingBottom: 12,
+            marginTop: 6
         },
         linkMenuButton: {
             cursor: 'pointer',
@@ -262,7 +308,7 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
     const linkMenuRefs = useRef<Array<HTMLButtonElement | null>>([]);
     const cartMenuRef = useRef<HTMLButtonElement>(null);
     const [cartMenuOpen, setCartMenuOpen] = useState(false);
-    const { items: cartItems } = useContext(CartContext);
+    const { items: cartItems, totalQuantity } = useContext(CartContext);
 
     useEffect(() => {
         setScrollTop(window.scrollY);
@@ -355,7 +401,7 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
                             </Link>
                         )}
                         <IconButton ref={cartMenuRef} onClick={handleCartOpen}>
-                            <Badge badgeContent={cartItems.length} color="secondary">
+                            <Badge badgeContent={totalQuantity} color="secondary">
                                 <ShoppingCart className={classes.cartIcon} />
                             </Badge>
                         </IconButton>
@@ -365,26 +411,32 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
                                     {...TransitionProps}
                                     style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
                                 >
-                                    <Paper elevation={4}>
+                                    <Paper elevation={4} className={classes.cartPaper}>
                                         <ClickAwayListener onClickAway={handleCartClose}>
-                                            <div>
+                                            <div className={classes.cartPaperContent}>
+                                                <div className={classes.cartTitle}>Shopping Cart</div>
                                                 {cartItems.map(cartItem => (
                                                     <div key={cartItem.id} className={classes.cartItemContainer}>
                                                         <Avatar
+                                                            className={classes.cartItemImage}
                                                             src={cartItem.product.image?.formats.thumbnail.url + ''}
                                                         />
-                                                        <div className={classes.cartItemCell}>
-                                                            {cartItem.product.name}
-                                                        </div>
-                                                        <div className={classes.cartItemCell}>
-                                                            {cartItem.quantity}
-                                                        </div>
-                                                        <div className={classes.cartItemCell}>
-                                                            {(cartItem.product.price || 0) * cartItem.quantity}
+                                                        <div className={classes.cartItemDetails}>
+                                                            <div className={classes.cartItemTitle}>
+                                                                {cartItem.product.name}
+                                                            </div>
+                                                            <div className={classes.cartItemPrice}>
+                                                                {formatCurrency(cartItem.product.price)}
+                                                            </div>
+                                                            <div className={classes.cartItemQuantity}>
+                                                                {`Quantity: ${cartItem.quantity}`}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 ))}
-                                                <Button _color='primary' link='/cart' onClick={handleCartClose}>Checkout</Button>
+                                                <Link href="/cart">
+                                                    <Button className={classes.checkoutButton} variant="contained" fullWidth color='primary' onClick={handleCartClose}>Checkout</Button>
+                                                </Link>
                                             </div>
                                         </ClickAwayListener>
                                     </Paper>
