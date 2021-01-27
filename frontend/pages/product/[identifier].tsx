@@ -149,7 +149,7 @@ const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
 
     const handleAddToCart = useCallback(() => {
         addToCart(product);
-    }, [addToCart]);
+    }, [addToCart, product]);
 
     const formattedPrice = useMemo(() => ((price || price === 0) && new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(price)), [price]);
 

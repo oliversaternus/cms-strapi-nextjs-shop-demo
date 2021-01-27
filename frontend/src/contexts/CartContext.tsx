@@ -60,7 +60,7 @@ export const CartContextProvider: React.FC<{}> = ({ children }) => {
 
     const addToCart = useCallback((product: Product) => {
         const _items = loadItems() || [...items];
-        const foundIndex = _items.findIndex((item) => item.product?.id === product.id);
+        const foundIndex = _items.findIndex((item) => item.product.id === product.id);
         if (foundIndex !== -1) {
             _items[foundIndex].quantity += 1;
             saveItems(_items);
@@ -72,7 +72,9 @@ export const CartContextProvider: React.FC<{}> = ({ children }) => {
             product,
             quantity: 1
         };
-        setItems([..._items, cartItem]);
+        _items.push(cartItem);
+        saveItems(_items);
+        setItems(_items);
     }, [items]);
 
     const removeFromCart = useCallback((cartId: string) => {

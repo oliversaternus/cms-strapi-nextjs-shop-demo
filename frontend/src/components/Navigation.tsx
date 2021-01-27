@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { createStyles, makeStyles, withStyles } from '@material-ui/core/styles';
-import { IconButton, useMediaQuery, Theme, MenuItem } from '@material-ui/core';
+import { IconButton, useMediaQuery, Theme, MenuItem, Avatar } from '@material-ui/core';
 import { Menu as MenuIcon, ArrowDropDown, ShoppingCart } from '@material-ui/icons';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -18,6 +18,7 @@ import ExpandIcon from '@material-ui/icons/ArrowDropDown';
 import Typography from '@material-ui/core/Typography';
 import { CartContext } from '../contexts/CartContext';
 import Badge from '@material-ui/core/Badge';
+import Button from './styledComponents/StyledButton';
 
 const Accordion = withStyles({
     root: {
@@ -210,6 +211,14 @@ const useStyles = makeStyles((theme: Theme) =>
             height: 32,
             width: 32
         },
+        cartItemContainer: {
+            display: 'flex',
+            width: 240,
+            maxWidth: 240
+        },
+        cartItemCell: {
+            padding: 24
+        },
         linkMenuButton: {
             cursor: 'pointer',
             marginBottom: 0,
@@ -251,6 +260,8 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
     const [selectedLinkId, setSelectedLinkId] = useState<number>();
     const [selectedAccordionLinkId, setSelectedAccordionLinkId] = useState<number>();
     const linkMenuRefs = useRef<Array<HTMLButtonElement | null>>([]);
+    const cartMenuRef = useRef<HTMLButtonElement>(null);
+    const [cartMenuOpen, setCartMenuOpen] = useState(false);
     const { items: cartItems } = useContext(CartContext);
 
     useEffect(() => {
@@ -275,6 +286,15 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
             return;
         }
         setSelectedAccordionLinkId(linkId);
+    };
+
+    const handleCartOpen = () => {
+        setCartMenuOpen(true);
+    };
+
+    const handleCartClose = () => {
+        console.log('clicked away');
+        setCartMenuOpen(false);
     };
 
     return (
@@ -334,11 +354,43 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
                                 <a target="_self" className={clsx(classes.link, transparent && !isScrolled && classes.transparentLink)}>{link.title}</a>
                             </Link>
                         )}
-                        <IconButton>
+                        <IconButton ref={cartMenuRef} onClick={handleCartOpen}>
                             <Badge badgeContent={cartItems.length} color="secondary">
                                 <ShoppingCart className={classes.cartIcon} />
                             </Badge>
                         </IconButton>
+                        <Popper open={cartMenuOpen} anchorEl={cartMenuRef.current} role={undefined} transition disablePortal>
+                            {({ TransitionProps, placement }) => (
+                                <Fade
+                                    {...TransitionProps}
+                                    style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                                >
+                                    <Paper elevation={4}>
+                                        <ClickAwayListener onClickAway={handleCartClose}>
+                                            <div>
+                                                {cartItems.map(cartItem => (
+                                                    <div key={cartItem.id} className={classes.cartItemContainer}>
+                                                        <Avatar
+                                                            src={cartItem.product.image?.formats.thumbnail.url + ''}
+                                                        />
+                                                        <div className={classes.cartItemCell}>
+                                                            {cartItem.product.name}
+                                                        </div>
+                                                        <div className={classes.cartItemCell}>
+                                                            {cartItem.quantity}
+                                                        </div>
+                                                        <div className={classes.cartItemCell}>
+                                                            {(cartItem.product.price || 0) * cartItem.quantity}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                                <Button _color='primary' link='/cart' onClick={handleCartClose}>Checkout</Button>
+                                            </div>
+                                        </ClickAwayListener>
+                                    </Paper>
+                                </Fade>
+                            )}
+                        </Popper>
                     </div>
                 </div>
             </div>
