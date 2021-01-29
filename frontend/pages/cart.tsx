@@ -6,6 +6,7 @@ import { getPage } from '../src/tools/Service';
 import Error from './404';
 import { CartContext } from '../src/contexts/CartContext';
 import Image from '../src/components/styledComponents/StyledImage';
+import CartSummary from '../src/components/shop/CartSummary';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -16,10 +17,19 @@ const useStyles = makeStyles(() =>
             justifyContent: 'flex-start',
             flexDirection: 'column'
         },
-        content: {
+        container: {
             width: '100%',
             padding: 32,
-            maxWidth: 1080
+            maxWidth: 1080,
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between'
+        },
+        content: {
+            padding: 32
+        },
+        cartSummary: {
+            maxWidth: 400,
         },
         cartItemContainer: {
             display: 'flex'
@@ -47,26 +57,29 @@ const CartPage: NextPage<{ page: Page }> = ({ page }) => {
 
     return (
         <div className={classes.root}>
-            <div className={classes.content}>
-                {
-                    cartItems.map(item => (
-                        <div className={classes.cartItemContainer}>
-                            <Image
-                                className={classes.cartItemImage}
-                                src={item.product.image?.formats.thumbnail.url + ''}
-                                previewUrl={item.product.image?.previewUrl}
-                            />
-                            <div className={classes.cartItemCell}>
-                                {item.product.name}
-                            </div>
-                            <div className={classes.cartItemCell}>
-                                {item.quantity}
-                            </div>
-                            <div className={classes.cartItemCell}>
-                                {(item.product.price || 0) * item.quantity}
-                            </div>
-                        </div>))
-                }
+            <div className={classes.container}>
+                <div className={classes.content}>
+                    {
+                        cartItems.map(item => (
+                            <div className={classes.cartItemContainer}>
+                                <Image
+                                    className={classes.cartItemImage}
+                                    src={item.product.image?.formats.thumbnail.url + ''}
+                                    previewUrl={item.product.image?.previewUrl}
+                                />
+                                <div className={classes.cartItemCell}>
+                                    {item.product.name}
+                                </div>
+                                <div className={classes.cartItemCell}>
+                                    {item.quantity}
+                                </div>
+                                <div className={classes.cartItemCell}>
+                                    {(item.product.price || 0) * item.quantity}
+                                </div>
+                            </div>))
+                    }
+                </div>
+                <CartSummary className={classes.cartSummary} />
             </div>
         </div>);
 }

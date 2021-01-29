@@ -1,11 +1,14 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { randomHex } from '../tools/Utils';
 import { Product, CartItem } from '../tools/Models';
+import { getUserLocale } from 'get-user-locale';
+import localeCode from 'locale-code';
 
 export const CartContext = React.createContext<{
     items: CartItem[];
     totalPrice: number;
     totalQuantity: number;
+    clientCountry: string;
     addToCart: (product: Product) => void;
     removeFromCart: (cartId: string) => void;
     setQuantity: (cartId: string, quantity: number) => void;
@@ -14,6 +17,7 @@ export const CartContext = React.createContext<{
         items: [],
         totalPrice: 0,
         totalQuantity: 0,
+        clientCountry: '',
         addToCart: () => undefined,
         removeFromCart: () => undefined,
         setQuantity: () => undefined
@@ -21,6 +25,13 @@ export const CartContext = React.createContext<{
 
 export const CartContextProvider: React.FC<{}> = ({ children }) => {
     const [items, setItems] = useState<CartItem[]>([]);
+    const [clientLanguageCode, setClientLanguage] = useState(getUserLocale());
+
+    const clientCountry = useMemo(() => localeCode.getCountryName(clientLanguageCode), [clientLanguageCode]);
+
+    useEffect(() => {
+        setClientLanguage(getUserLocale());
+    }, []);
 
     const loadItems = useCallback<() => CartItem[] | undefined>(() => {
         if (window && window.localStorage) {
@@ -105,7 +116,7 @@ export const CartContextProvider: React.FC<{}> = ({ children }) => {
     );
 
     return (
-        <CartContext.Provider value={{ items, totalPrice, totalQuantity, addToCart, removeFromCart, setQuantity }}>
+        <CartContext.Provider value={{ items, totalPrice, totalQuantity, addToCart, removeFromCart, setQuantity, clientCountry }}>
             {children}
         </CartContext.Provider>
     );
