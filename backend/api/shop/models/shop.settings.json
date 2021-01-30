@@ -1,0 +1,29 @@
+{
+  "kind": "singleType",
+  "collectionName": "shops",
+  "info": {
+    "name": "Shop",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "currency": {
+      "type": "enumeration",
+      "enum": [
+        "EUR",
+        "Dollar",
+        "Pound",
+        "Yen"
+      ]
+    },
+    "shipping": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shop.shipping-region"
+    }
+  }
+}

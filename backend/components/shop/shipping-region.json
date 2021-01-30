@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_shop_shipping_regions",
+  "info": {
+    "name": "ShippingRegion",
+    "icon": "shipping-fast"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "countries": {
+      "type": "json"
+    },
+    "price": {
+      "type": "decimal"
+    }
+  }
+}
