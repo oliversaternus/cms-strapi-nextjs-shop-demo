@@ -4,9 +4,10 @@ import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { fade, TextField, MenuItem, TextFieldProps, Theme } from "@material-ui/core";
 
 type StyledSelectProps = TextFieldProps & {
-    values?: Array<{ label: string, value: string | number }>;
+    values?: Array<{ label: string, value: string | number, startAdornment?: () => React.ReactNode }>;
     selectClass?: string;
     menuItemClass?: string;
+    inputClass?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -59,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }));
 
 const StyledSelect: React.FC<StyledSelectProps> = (props) => {
-    const { className, values, selectClass, menuItemClass, ...others } = props;
+    const { className, values, selectClass, menuItemClass, inputClass, children, value, ...others } = props;
     const classes = useStyles();
 
     return (
@@ -68,7 +69,7 @@ const StyledSelect: React.FC<StyledSelectProps> = (props) => {
             variant='filled'
             className={clsx(classes.textfield, className)}
             InputProps={{
-                className: classes.input,
+                className: clsx(classes.input, inputClass),
                 disableUnderline: true
             }}
             InputLabelProps={{
@@ -77,10 +78,12 @@ const StyledSelect: React.FC<StyledSelectProps> = (props) => {
             SelectProps={{
                 classes: { root: clsx(classes.select, selectClass) }
             }}
+            value={value}
             {...others}
         >
             {values && values.map((valueItem, index) =>
                 <MenuItem key={valueItem.label + index} value={valueItem.value} className={clsx(classes.menuItem, menuItemClass)}>
+                    {valueItem.startAdornment?.()}
                     {valueItem.label}
                 </MenuItem>)}
         </TextField>

@@ -1,10 +1,13 @@
-import React, { useState, useRef, useContext, useMemo, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { createStyles, makeStyles, fade } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
 import { ShopContext } from '../../contexts/ShopContext';
 import Button from '../styledComponents/StyledButton';
 import { formatCurrency } from '../../tools/Utils';
 import clsx from 'clsx';
+import ReactCountryFlag from 'react-country-flag';
+import Select from '../styledComponents/StyledSelect';
+import { getName } from 'country-list';
 
 type CartSummaryProps = {
     className?: string;
@@ -54,27 +57,23 @@ const useStyles = makeStyles((theme: Theme) =>
             paddingBottom: 12,
             marginTop: 6
         },
+        selectRoot: {
+            paddingTop: 0,
+            paddingBottom: 0,
+            paddingRight: 0
+        },
+        select: {
+            fontSize: 16
+        },
+        selectItem: {
+            fontSize: 16
+        }
     }),
 );
 
 const CartSummary: React.FC<CartSummaryProps> = ({ className }) => {
     const classes = useStyles();
-    const cartMenuRef = useRef<HTMLButtonElement>(null);
-    const [cartMenuOpen, setCartMenuOpen] = useState(false);
-    const { items: cartItems, totalQuantity, removeFromCart, totalPrice, clientCountry } = useContext(ShopContext);
-    
-
-    const handleCartOpen = () => {
-        setCartMenuOpen(true);
-    };
-
-    const handleCartClose = () => {
-        setCartMenuOpen(false);
-    };
-
-    const handleRemoveFromCart = (cartId: string) => () => {
-        removeFromCart(cartId);
-    }
+    const { items: cartItems, totalQuantity, removeFromCart, totalPrice, clientCountry, setShippingCountry, availibleShippingCountries } = useContext(ShopContext);
 
     return (
         <div className={classes.root}>
@@ -89,10 +88,25 @@ const CartSummary: React.FC<CartSummaryProps> = ({ className }) => {
             </div>
             <div className={classes.summaryRow}>
                 <div className={classes.rowTitle}>Shipping to: </div>
-                <div className={classes.rowValue}>{clientCountry}</div>
+                <div className={classes.rowValue}>
+                    <Select
+                        className={classes.selectRoot}
+                        selectClass={classes.select}
+                        menuItemClass={classes.selectItem}
+                        value={clientCountry}
+                        onChange={(event) => setShippingCountry(event.target.value)}
+                        values={availibleShippingCountries.map(code => (
+                            {
+                                label: getName(code) || '',
+                                value: code,
+                                startAdornment: () => <ReactCountryFlag style={{ marginRight: 8, width: '1.6em', height: '1.6em' }} svg countryCode={code} />
+                            })
+                        )}
+                    />
+                </div>
             </div>
 
-            <Button _color='primary' className={classes.proceedButton} variant="contained" fullWidth color='primary' onClick={handleCartClose}>Procedd to Checkout</Button>
+            <Button _color='primary' className={classes.proceedButton} variant="contained" fullWidth color='primary' onClick={() => undefined}>Proceed to Checkout</Button>
         </div>
     );
 }

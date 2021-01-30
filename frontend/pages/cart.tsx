@@ -30,6 +30,7 @@ const useStyles = makeStyles(() =>
         },
         cartSummary: {
             maxWidth: 400,
+            width: 320,
         },
         cartItemContainer: {
             display: 'flex'
@@ -61,7 +62,7 @@ const CartPage: NextPage<{ page: Page }> = ({ page }) => {
                 <div className={classes.content}>
                     {
                         cartItems.map(item => (
-                            <div className={classes.cartItemContainer}>
+                            <div className={classes.cartItemContainer} key={item.id}>
                                 <Image
                                     className={classes.cartItemImage}
                                     src={item.product.image?.formats.thumbnail.url + ''}

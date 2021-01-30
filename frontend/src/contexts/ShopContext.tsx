@@ -1,37 +1,42 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { randomHex } from '../tools/Utils';
 import { Product, CartItem, ShopConfig } from '../tools/Models';
-import { getUserLocale } from 'get-user-locale';
-import localeCode from 'locale-code';
 
 export const ShopContext = React.createContext<{
     items: CartItem[];
     totalPrice: number;
     totalQuantity: number;
     clientCountry: string;
+    availibleShippingCountries: string[];
     addToCart: (product: Product) => void;
     removeFromCart: (cartId: string) => void;
     setQuantity: (cartId: string, quantity: number) => void;
+    setShippingCountry: (country: string) => void;
 }>(
     {
         items: [],
         totalPrice: 0,
         totalQuantity: 0,
         clientCountry: '',
+        availibleShippingCountries: [],
         addToCart: () => undefined,
         removeFromCart: () => undefined,
-        setQuantity: () => undefined
+        setQuantity: () => undefined,
+        setShippingCountry: () => undefined
     });
 
 export const ShopContextProvider: React.FC<{ config: ShopConfig }> = ({ children, config }) => {
+
+    const availibleShippingCountries = useMemo(() => {
+        let countries: string[] = [];
+        for (const category of (config.shipping || [])) {
+            countries = [...countries, ...(category.countries || [])];
+        }
+        return countries;
+    }, [config]);
+
     const [items, setItems] = useState<CartItem[]>([]);
-    const [clientLanguageCode, setClientLanguage] = useState(getUserLocale());
-
-    const clientCountry = useMemo(() => localeCode.getCountryName(clientLanguageCode), [clientLanguageCode]);
-
-    useEffect(() => {
-        setClientLanguage(getUserLocale());
-    }, []);
+    const [clientCountry, setClientCountry] = useState(availibleShippingCountries[0] || 'DE');
 
     const loadItems = useCallback<() => CartItem[] | undefined>(() => {
         if (window && window.localStorage) {
@@ -108,6 +113,10 @@ export const ShopContextProvider: React.FC<{ config: ShopConfig }> = ({ children
         }
     }, [items]);
 
+    const setShippingCountry = useCallback<(country: string) => void>((country) => {
+        setClientCountry(country);
+    }, []);
+
     useEffect(
         () => {
             const _items = loadItems() || [];
@@ -116,7 +125,17 @@ export const ShopContextProvider: React.FC<{ config: ShopConfig }> = ({ children
     );
 
     return (
-        <ShopContext.Provider value={{ items, totalPrice, totalQuantity, addToCart, removeFromCart, setQuantity, clientCountry }}>
+        <ShopContext.Provider value={{
+            items,
+            totalPrice,
+            totalQuantity,
+            addToCart,
+            removeFromCart,
+            setQuantity,
+            clientCountry,
+            setShippingCountry,
+            availibleShippingCountries
+        }}>
             {children}
         </ShopContext.Provider>
     );
