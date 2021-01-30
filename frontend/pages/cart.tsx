@@ -4,7 +4,7 @@ import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Page } from '../src/tools/Models';
 import { getPage } from '../src/tools/Service';
 import Error from './404';
-import { CartContext } from '../src/contexts/CartContext';
+import { ShopContext } from '../src/contexts/ShopContext';
 import Image from '../src/components/styledComponents/StyledImage';
 import CartSummary from '../src/components/shop/CartSummary';
 
@@ -47,7 +47,7 @@ const useStyles = makeStyles(() =>
 const CartPage: NextPage<{ page: Page }> = ({ page }) => {
     const { id, content } = page;
     const classes = useStyles();
-    const { items: cartItems } = useContext(CartContext);
+    const { items: cartItems } = useContext(ShopContext);
 
     /*
     if (!id) {

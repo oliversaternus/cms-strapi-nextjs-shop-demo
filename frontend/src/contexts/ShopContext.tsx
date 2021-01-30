@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { randomHex } from '../tools/Utils';
-import { Product, CartItem } from '../tools/Models';
+import { Product, CartItem, ShopConfig } from '../tools/Models';
 import { getUserLocale } from 'get-user-locale';
 import localeCode from 'locale-code';
 
-export const CartContext = React.createContext<{
+export const ShopContext = React.createContext<{
     items: CartItem[];
     totalPrice: number;
     totalQuantity: number;
@@ -23,7 +23,7 @@ export const CartContext = React.createContext<{
         setQuantity: () => undefined
     });
 
-export const CartContextProvider: React.FC<{}> = ({ children }) => {
+export const ShopContextProvider: React.FC<{ config: ShopConfig }> = ({ children, config }) => {
     const [items, setItems] = useState<CartItem[]>([]);
     const [clientLanguageCode, setClientLanguage] = useState(getUserLocale());
 
@@ -116,8 +116,8 @@ export const CartContextProvider: React.FC<{}> = ({ children }) => {
     );
 
     return (
-        <CartContext.Provider value={{ items, totalPrice, totalQuantity, addToCart, removeFromCart, setQuantity, clientCountry }}>
+        <ShopContext.Provider value={{ items, totalPrice, totalQuantity, addToCart, removeFromCart, setQuantity, clientCountry }}>
             {children}
-        </CartContext.Provider>
+        </ShopContext.Provider>
     );
 }

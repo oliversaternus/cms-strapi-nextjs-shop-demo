@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext, useMemo, useEffect } from 'react';
 import { createStyles, makeStyles, fade } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
-import { CartContext } from '../../contexts/CartContext';
+import { ShopContext } from '../../contexts/ShopContext';
 import Button from '../styledComponents/StyledButton';
 import { formatCurrency } from '../../tools/Utils';
 import clsx from 'clsx';
@@ -61,7 +61,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({ className }) => {
     const classes = useStyles();
     const cartMenuRef = useRef<HTMLButtonElement>(null);
     const [cartMenuOpen, setCartMenuOpen] = useState(false);
-    const { items: cartItems, totalQuantity, removeFromCart, totalPrice, clientCountry } = useContext(CartContext);
+    const { items: cartItems, totalQuantity, removeFromCart, totalPrice, clientCountry } = useContext(ShopContext);
     
 
     const handleCartOpen = () => {

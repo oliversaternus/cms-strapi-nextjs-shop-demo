@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { NotificationContext } from '../../src/contexts/NotificationContext';
 import Image from '../../src/components/styledComponents/StyledImage';
 import Button from '../../src/components/styledComponents/StyledButton';
-import { CartContext } from '../../src/contexts/CartContext';
+import { ShopContext } from '../../src/contexts/ShopContext';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -144,7 +144,7 @@ const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
     const classes = useStyles();
     const parsedContent = useMemo(() => parse(details || ''), [details]);
     const { openNotification } = useContext(NotificationContext);
-    const { addToCart } = useContext(CartContext);
+    const { addToCart } = useContext(ShopContext);
     const router = useRouter();
 
     const handleAddToCart = useCallback(() => {

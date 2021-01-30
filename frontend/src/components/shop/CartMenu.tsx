@@ -7,7 +7,7 @@ import Fade from '@material-ui/core/Fade';
 import Popper from '@material-ui/core/Popper';
 import Paper from '@material-ui/core/Paper';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import { CartContext } from '../../contexts/CartContext';
+import { ShopContext } from '../../contexts/ShopContext';
 import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 import { formatCurrency } from '../../tools/Utils';
@@ -111,7 +111,7 @@ const CartMenu: React.FC<CartMenuProps> = ({ cartURL }) => {
     const classes = useStyles();
     const cartMenuRef = useRef<HTMLButtonElement>(null);
     const [cartMenuOpen, setCartMenuOpen] = useState(false);
-    const { items: cartItems, totalQuantity, removeFromCart } = useContext(CartContext);
+    const { items: cartItems, totalQuantity, removeFromCart } = useContext(ShopContext);
 
     const handleCartOpen = () => {
         setCartMenuOpen(true);

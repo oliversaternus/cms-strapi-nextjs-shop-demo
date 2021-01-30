@@ -41,6 +41,16 @@ export type CookieConfig = {
     }>
 };
 
+export type ShopConfig = {
+    id?: number;
+    currency?: 'EUR' | 'Dollar' | 'Pound' | 'Yen',
+    shipping?: Array<{
+        id: number;
+        countries: string[];
+        price: number;
+    }>
+};
+
 export type NavigationArea = Array<{
     id: number;
     title?: string;

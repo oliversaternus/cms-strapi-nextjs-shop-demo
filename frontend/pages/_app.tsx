@@ -10,12 +10,12 @@ import { CircularProgress } from '@material-ui/core';
 import cookies from 'next-cookies';
 import CookieMessage from '../src/components/CookieMessage';
 import { CookieContextProvider, AcceptCookieType } from '../src/contexts/CookieContext';
-import { CartContextProvider } from '../src/contexts/CartContext';
+import { ShopContextProvider } from '../src/contexts/ShopContext';
 import Analytics, { ReactGA } from '../src/tools/Analytics';
 import Chat from '../src/tools/Chat';
 import '../styles.css';
-import { getCookieConfig, getGlobalData, getIntegrations, getProducts } from '../src/tools/Service';
-import { CookieConfig, GlobalData, Integrations, Product } from '../src/tools/Models';
+import { getCookieConfig, getGlobalData, getIntegrations, getProducts, getShopConfig } from '../src/tools/Service';
+import { CookieConfig, GlobalData, Integrations, Product, ShopConfig } from '../src/tools/Models';
 import Navigation from '../src/components/Navigation';
 import Footer from '../src/components/Footer';
 
@@ -33,10 +33,11 @@ interface ExtendedAppProps extends AppProps {
   globalData: GlobalData;
   integrations: Integrations;
   cookieConfig: CookieConfig;
+  shopConfig: ShopConfig;
 }
 
 function CustomApp(props: ExtendedAppProps) {
-  const { Component, pageProps, documentCookies, globalData, integrations, cookieConfig } = props;
+  const { Component, pageProps, documentCookies, globalData, integrations, cookieConfig, shopConfig } = props;
   const { navigation, footer, logo, favicon, copyright, previewImage } = globalData;
   const [isLoading, setIsLoading] = useState(false);
   const initialCookies = useMemo(() => {
@@ -113,7 +114,7 @@ function CustomApp(props: ExtendedAppProps) {
         <CssBaseline />
         <CookieContextProvider initialValue={initialCookies} session={documentCookies.sessionId}>
           <NotificationContextProvider>
-            <CartContextProvider>
+            <ShopContextProvider config={shopConfig}>
               {integrations.Analytics?.enabled &&
                 <Analytics
                   trackingID={integrations.Analytics.GATrackingID}
@@ -149,7 +150,7 @@ function CustomApp(props: ExtendedAppProps) {
                 copyright={copyright}
               />
               <base target='_blank'></base>
-            </CartContextProvider>
+            </ShopContextProvider>
           </NotificationContextProvider>
         </CookieContextProvider>
       </ThemeProvider>
@@ -157,18 +158,20 @@ function CustomApp(props: ExtendedAppProps) {
   );
 }
 
-CustomApp.getInitialProps = async (appContext: AppContext): Promise<{ documentCookies: Record<string, string | undefined>, pageProps: any, globalData: GlobalData, integrations: Integrations, cookieConfig: CookieConfig }> => {
+CustomApp.getInitialProps = async (appContext: AppContext): Promise<{ documentCookies: Record<string, string | undefined>, pageProps: any, globalData: GlobalData, integrations: Integrations, cookieConfig: CookieConfig, shopConfig: ShopConfig }> => {
   const documentCookies = cookies(appContext.ctx) || {};
   const appProps = await App.getInitialProps(appContext);
-  const responses = await Promise.all([getGlobalData(), getIntegrations(), getCookieConfig(), getProducts({ _sort: 'name:DESC' })]);
+  const responses = await Promise.all([getGlobalData(), getIntegrations(), getCookieConfig(), getProducts({ _sort: 'name:DESC' }), getShopConfig()]);
   const globalResponse = responses[0];
   const integrationsResponse = responses[1];
   const cookieConfigResponse = responses[2];
   const productsResponse = responses[3];
+  const shopConfigResponse = responses[4];
   const globalData: GlobalData = (!globalResponse.isError && globalResponse.data) || {};
   const integrations: Integrations = (!integrationsResponse.isError && integrationsResponse.data) || {};
   const cookieConfig: CookieConfig = (!cookieConfigResponse.isError && cookieConfigResponse.data) || {};
   const products: Product[] = (!productsResponse.isError && productsResponse.data) || [];
+  const shopConfig: ShopConfig = (!shopConfigResponse.isError && shopConfigResponse.data) || {};
   if (globalData && products.length) {
     const maxId = globalData.navigation?.map(item => item.id).sort((a, b) => b - a)?.[0];
     globalData.navigation = [
@@ -184,7 +187,7 @@ CustomApp.getInitialProps = async (appContext: AppContext): Promise<{ documentCo
       ...(globalData.navigation || [])
     ]
   }
-  return { documentCookies, globalData, integrations, cookieConfig, ...appProps };
+  return { documentCookies, globalData, integrations, cookieConfig, shopConfig, ...appProps };
 }
 
 export default CustomApp;
