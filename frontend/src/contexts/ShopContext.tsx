@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { randomHex } from '../tools/Utils';
 import { Product, CartItem, ShopConfig } from '../tools/Models';
+import useDebouncedEffect from '../hooks/useDebouncedEffect';
 
 export const ShopContext = React.createContext<{
     items: CartItem[];
