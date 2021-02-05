@@ -44,13 +44,13 @@ const useStyles = makeStyles((theme: Theme) =>
         rowTitle: {
             color: theme.palette.componentStyles.shop?.main.textStrong || theme.palette.componentStyles.shop?.main.text || theme.palette.text.primary,
             fontSize: 16,
-            fontWeight: 500,
+            fontWeight: 400,
             paddingBottom: 6
         },
         rowValue: {
             color: theme.palette.componentStyles.shop?.main.textLight || theme.palette.componentStyles.shop?.main.text || theme.palette.text.primary,
             fontSize: 16,
-            fontWeight: 400
+            fontWeight: 500
         },
         proceedButton: {
             marginTop: 18,

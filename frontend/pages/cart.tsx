@@ -67,12 +67,11 @@ const useStyles = makeStyles((theme) =>
             alignItems: 'center',
             color: theme.palette.componentStyles.shop?.main.textLight || theme.palette.componentStyles.shop?.main.text || theme.palette.text.primary,
             fontSize: 16,
-            fontWeight: 400
+            fontWeight: 500
         },
         titleCell: {
         },
         titleLink: {
-            fontWeight: 500,
             color: theme.palette.componentStyles.shop?.main.textLight || theme.palette.componentStyles.shop?.main.text || theme.palette.text.primary,
             '&:hover': {
                 textDecoration: 'none',
