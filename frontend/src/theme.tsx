@@ -24,6 +24,10 @@ declare module "@material-ui/core/styles/createPalette" {
       footer?: customColors;
       input?: customColors;
       dialog?: customColors;
+      shop?: {
+        main: customColors;
+        dialog: customColors;
+      };
     }
   }
   interface PaletteOptions {
@@ -51,6 +55,10 @@ declare module "@material-ui/core/styles/createPalette" {
       footer?: customColors;
       input?: customColors;
       dialog?: customColors;
+      shop?: {
+        main: customColors;
+        dialog: customColors;
+      };
     }
   }
 }
@@ -100,7 +108,11 @@ export const themeDefault = createMuiTheme({
       },
       dialog: {
       },
-      input: {}
+      input: {},
+      shop: {
+        main: {},
+        dialog: {}
+      }
     },
     sectionStyles: {
       hero: {
@@ -164,7 +176,11 @@ export const themeLight = createMuiTheme({
       },
       dialog: {
       },
-      input: {}
+      input: {},
+      shop: {
+        main: {},
+        dialog: {}
+      }
     },
     sectionStyles: {
       hero: {
@@ -228,6 +244,10 @@ export const themeDark = createMuiTheme({
       },
       input: {
         background: '#282828'
+      },
+      shop: {
+        main: {},
+        dialog: {}
       }
     },
     sectionStyles: {

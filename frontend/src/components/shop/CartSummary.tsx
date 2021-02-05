@@ -16,7 +16,7 @@ type CartSummaryProps = {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-            border: `1px solid ${fade(theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary, 0.2)}`,
+            border: `1px solid ${fade(theme.palette.componentStyles.shop?.main.text || theme.palette.text.primary, 0.2)}`,
             padding: 24,
             borderRadius: 4
         },
@@ -27,37 +27,38 @@ const useStyles = makeStyles((theme: Theme) =>
             justifyContent: 'center',
             padding: 16,
             paddingTop: 0,
-            color: theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
+            color: theme.palette.componentStyles.shop?.main.text || theme.palette.text.primary,
             fontSize: 16,
             fontWeight: 600,
-            borderBottom: `1px solid ${fade(theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary, 0.2)}`,
+            borderBottom: `1px solid ${fade(theme.palette.componentStyles.shop?.main.text || theme.palette.text.primary, 0.2)}`,
             marginBottom: 12
         },
         summaryRow: {
             display: 'flex',
             width: '100%',
             justifyContent: 'space-between',
-            padding: 6,
-            paddinTop: 12,
-            paddingBottom: 12
+            paddingTop: 6,
+            paddingBottom: 6,
+            flexWrap: 'wrap'
         },
         rowTitle: {
-            color: theme.palette.componentStyles.navigation?.main.textStrong || theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
+            color: theme.palette.componentStyles.shop?.main.textStrong || theme.palette.componentStyles.shop?.main.text || theme.palette.text.primary,
             fontSize: 16,
             fontWeight: 500,
-            paddingBotom: 6
+            paddingBottom: 6
         },
         rowValue: {
-            color: theme.palette.componentStyles.navigation?.main.textLight || theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
+            color: theme.palette.componentStyles.shop?.main.textLight || theme.palette.componentStyles.shop?.main.text || theme.palette.text.primary,
             fontSize: 16,
             fontWeight: 400
         },
         proceedButton: {
+            marginTop: 18,
             paddingTop: 12,
-            paddingBottom: 12,
-            marginTop: 6
+            paddingBottom: 12
         },
         selectRoot: {
+            width: '100%',
             paddingTop: 0,
             paddingBottom: 0,
             paddingRight: 0
@@ -76,8 +77,8 @@ const CartSummary: React.FC<CartSummaryProps> = ({ className }) => {
     const { items: cartItems, totalQuantity, removeFromCart, totalPrice, clientCountry, setShippingCountry, availibleShippingCountries } = useContext(ShopContext);
 
     return (
-        <div className={classes.root}>
-            <div className={clsx(classes.title, className)}>Order Summary</div>
+        <div className={clsx(classes.root, className)}>
+            <div className={classes.title}>Order Summary</div>
             <div className={classes.summaryRow}>
                 <div className={classes.rowTitle}>Order Total</div>
                 <div className={classes.rowValue}>{formatCurrency(totalPrice)}</div>
@@ -87,8 +88,8 @@ const CartSummary: React.FC<CartSummaryProps> = ({ className }) => {
                 <div className={classes.rowValue}>{formatCurrency(20)}</div>
             </div>
             <div className={classes.summaryRow}>
-                <div className={classes.rowTitle}>Shipping to: </div>
-                <div className={classes.rowValue}>
+                <div className={classes.rowTitle} style={{ paddingBottom: 12 }}>Shipping Country</div>
+                <div className={classes.rowValue} style={{ width: '100%' }}>
                     <Select
                         className={classes.selectRoot}
                         selectClass={classes.select}
@@ -106,7 +107,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({ className }) => {
                 </div>
             </div>
 
-            <Button _color='primary' className={classes.proceedButton} variant="contained" fullWidth color='primary' onClick={() => undefined}>Proceed to Checkout</Button>
+            <Button _color='primary' className={classes.proceedButton} fullWidth color='primary' onClick={() => undefined}>Proceed to Checkout</Button>
         </div>
     );
 }

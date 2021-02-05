@@ -44,6 +44,7 @@ export type CookieConfig = {
 export type ShopConfig = {
     id?: number;
     currency?: 'EUR' | 'Dollar' | 'Pound' | 'Yen',
+    maxQuantity?: number;
     shipping?: Array<{
         id: number;
         countries: string[];

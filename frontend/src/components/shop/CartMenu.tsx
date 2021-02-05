@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) =>
         cartItemTitle: {
             color: theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
             fontSize: 16,
-            fontWeight: 600,
+            fontWeight: 500,
             paddingBotom: 6
         },
         cartItemPrice: {
@@ -101,6 +101,7 @@ const useStyles = makeStyles((theme: Theme) =>
         link: {
             color: theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary,
             '&:hover': {
+                textDecoration: 'none',
                 color: theme.palette.componentStyles.navigation?.main.text || theme.palette.text.primary
             }
         }

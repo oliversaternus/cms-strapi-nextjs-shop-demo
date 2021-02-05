@@ -148,7 +148,10 @@ const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
     const router = useRouter();
 
     const handleAddToCart = useCallback(() => {
-        addToCart(product);
+        const success = addToCart(product);
+        if (!success) {
+            openNotification('error', 'Maximum Quantity reached. Please contact us for custom order.');
+        };
     }, [addToCart, product]);
 
     const formattedPrice = useMemo(() => ((price || price === 0) && new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(price)), [price]);

@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         fontFamily: theme.typography.fontFamily,
         color: theme.palette.text.primary,
         backgroundColor: theme.palette.componentStyles.input?.background || theme.palette.backgrounds.main,
-        fontSize: 18,
+        fontSize: 16,
         '&:hover': {
             backgroundColor: theme.palette.componentStyles.input?.background || theme.palette.backgrounds.main
         },
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         paddingRight: 0,
         fontFamily: theme.typography.fontFamily,
         color: theme.palette.componentStyles.input?.text || theme.palette.text.primary,
-        fontSize: 18,
+        fontSize: 16,
         backgroundColor: theme.palette.componentStyles.input?.background || theme.palette.backgrounds.main,
         '&:focus': {
             backgroundColor: theme.palette.componentStyles.input?.background || theme.palette.backgrounds.main
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     menuItem: {
         color: theme.palette.componentStyles.input?.text || theme.palette.text.primary,
         fontFamily: theme.typography.fontFamily,
-        fontSize: 18
+        fontSize: 16
     }
 }));
 
