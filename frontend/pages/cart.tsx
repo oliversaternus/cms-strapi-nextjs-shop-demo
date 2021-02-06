@@ -52,9 +52,13 @@ const useStyles = makeStyles((theme) =>
             maxWidth: 300,
             width: 300,
         },
-        cartItemContainer: {
+        cartRow: {
             display: 'flex',
+            width: '100%',
             marginTop: 12
+        },
+        cartItemContainer: {
+            display: 'flex'
         },
         cartItemImage: {
             height: 128,
@@ -117,10 +121,16 @@ const useStyles = makeStyles((theme) =>
             cartItemCell: {
                 paddingTop: 12,
                 paddingBottom: 12
+            }
+        },
+        '@media (max-width: 400px)': {
+            cartItemCell: {
+                paddingLeft: 16,
+                padding: 6,
+                paddingRight: 0
             },
-            cartItemImage: {
-                height: 196,
-                width: 196
+            container: {
+                padding: 24
             }
         }
     }),
@@ -163,45 +173,45 @@ const CartPage: NextPage<{ page: Page }> = ({ page }) => {
                 <div className={classes.contentContainer}>
                     <div className={classes.cartTitle}>Cart</div>
                     {cartItems.map(item => (
-                        <Grid container className={classes.cartItemContainer} key={item.id}>
-                            <Grid item>
-                                <Link href={`/product/${item.product.id}`}>
-                                    <a>
-                                        <Image
-                                            className={classes.cartItemImage}
-                                            src={item.product.image?.formats.thumbnail.url + ''}
-                                            previewUrl={item.product.image?.previewUrl}
-                                        />
-                                    </a>
-                                </Link>
+                        <div className={classes.cartRow}>
+                            <Link href={`/product/${item.product.id}`}>
+                                <a>
+                                    <Image
+                                        className={classes.cartItemImage}
+                                        src={item.product.image?.formats.thumbnail.url + ''}
+                                        previewUrl={item.product.image?.previewUrl}
+                                    />
+                                </a>
+                            </Link>
+                            <Grid container className={classes.cartItemContainer} key={item.id}>
+                                <Grid item xs className={clsx(classes.cartItemCell, classes.titleCell)}>
+                                    <Link href={`/product/${item.product.id}`}>
+                                        <a className={classes.titleLink}>
+                                            {item.product.name}
+                                        </a>
+                                    </Link>
+                                </Grid>
+                                <Grid item xs className={clsx(classes.cartItemCell, classes.quantityCell)}>
+                                    <Select
+                                        className={classes.quantitySelect}
+                                        value={item.quantity}
+                                        onChange={handleChangeQuantity(item)}
+                                        values={quantities.map(num => (
+                                            {
+                                                label: num + '',
+                                                value: num,
+                                            })
+                                        )}
+                                    />
+                                </Grid>
+                                <Grid item xs className={clsx(classes.cartItemCell, classes.priceCell)}>
+                                    {formatCurrency((item.product.price || 0) * item.quantity)}
+                                    <IconButton className={classes.deleteButton} color='primary' onClick={handleRemoveFromCart(item)}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Grid>
                             </Grid>
-                            <Grid item xs className={clsx(classes.cartItemCell, classes.titleCell)}>
-                                <Link href={`/product/${item.product.id}`}>
-                                    <a className={classes.titleLink}>
-                                        {item.product.name}
-                                    </a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs className={clsx(classes.cartItemCell, classes.quantityCell)}>
-                                <Select
-                                    className={classes.quantitySelect}
-                                    value={item.quantity}
-                                    onChange={handleChangeQuantity(item)}
-                                    values={quantities.map(num => (
-                                        {
-                                            label: num + '',
-                                            value: num,
-                                        })
-                                    )}
-                                />
-                            </Grid>
-                            <Grid item xs className={clsx(classes.cartItemCell, classes.priceCell)}>
-                                {formatCurrency((item.product.price || 0) * item.quantity)}
-                                <IconButton className={classes.deleteButton} color='primary' onClick={handleRemoveFromCart(item)}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </Grid>
-                        </Grid>))
+                        </div>))
                     }
                 </div>
                 <CartSummary className={classes.cartSummary} onProceed={handleCheckoutOpen} />

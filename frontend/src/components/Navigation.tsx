@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createStyles, makeStyles, withStyles } from '@material-ui/core/styles';
-import { IconButton, useMediaQuery, Theme, MenuItem } from '@material-ui/core';
+import { IconButton, useMediaQuery, Theme, MenuItem, Avatar } from '@material-ui/core';
 import { Menu as MenuIcon, ArrowDropDown } from '@material-ui/icons';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -205,6 +205,9 @@ const useStyles = makeStyles((theme: Theme) =>
         menuLink: {
             margin: 0
         },
+        linkAvatar: {
+            marginRight: 12
+        },
         linkMenuButton: {
             cursor: 'pointer',
             marginBottom: 0,
@@ -311,6 +314,7 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
                                                                 key={item.id}
                                                                 onClick={() => setSelectedLinkId(undefined)}
                                                             >
+                                                                {item.imageUrl && <Avatar src={item.imageUrl} className={classes.linkAvatar}></Avatar>}
                                                                 <Link href={item.path + ''} >
                                                                     <a target="_self" className={clsx(classes.link, classes.menuLink)}>{item.link}</a>
                                                                 </Link>

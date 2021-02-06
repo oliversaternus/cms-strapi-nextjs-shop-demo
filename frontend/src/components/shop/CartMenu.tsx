@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useMemo } from 'react';
 import { createStyles, makeStyles, fade } from '@material-ui/core/styles';
 import { IconButton, Theme, Avatar } from '@material-ui/core';
 import { ShoppingCart, DeleteForever as DeleteIcon, ShoppingCartOutlined } from '@material-ui/icons';
@@ -11,6 +11,7 @@ import { ShopContext } from '../../contexts/ShopContext';
 import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 import { formatCurrency } from '../../tools/Utils';
+import { useRouter } from 'next/router';
 
 type CartMenuProps = {
     cartURL: string;
@@ -113,9 +114,14 @@ const CartMenu: React.FC<CartMenuProps> = ({ cartURL }) => {
     const cartMenuRef = useRef<HTMLButtonElement>(null);
     const [cartMenuOpen, setCartMenuOpen] = useState(false);
     const { items: cartItems, totalQuantity, removeFromCart } = useContext(ShopContext);
+    const router = useRouter();
+
+    const isOnCart = useMemo(() => router.pathname.startsWith('/cart'), [router, router.pathname]);
 
     const handleCartOpen = () => {
-        setCartMenuOpen(true);
+        if (!isOnCart) {
+            setCartMenuOpen(true);
+        }
     };
 
     const handleCartClose = () => {
@@ -133,7 +139,7 @@ const CartMenu: React.FC<CartMenuProps> = ({ cartURL }) => {
                     <ShoppingCart className={classes.cartIcon} />
                 </Badge>
             </IconButton>
-            <Popper open={cartMenuOpen} anchorEl={cartMenuRef.current} role={undefined} transition disablePortal>
+            <Popper open={cartMenuOpen && !isOnCart} anchorEl={cartMenuRef.current} role={undefined} transition disablePortal>
                 {({ TransitionProps, placement }) => (
                     <Fade
                         {...TransitionProps}

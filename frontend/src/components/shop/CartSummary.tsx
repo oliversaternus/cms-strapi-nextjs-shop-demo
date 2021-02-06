@@ -8,6 +8,8 @@ import clsx from 'clsx';
 import ReactCountryFlag from 'react-country-flag';
 import Select from '../styledComponents/StyledSelect';
 import { getName } from 'country-list';
+import Tooltip from '../styledComponents/StyledTooltip';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
 
 type CartSummaryProps = {
     className?: string;
@@ -46,7 +48,10 @@ const useStyles = makeStyles((theme: Theme) =>
             color: theme.palette.componentStyles.shop?.main.textStrong || theme.palette.componentStyles.shop?.main.text || theme.palette.text.primary,
             fontSize: 16,
             fontWeight: 400,
-            paddingBottom: 6
+            paddingBottom: 6,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start'
         },
         rowValue: {
             color: theme.palette.componentStyles.shop?.main.textLight || theme.palette.componentStyles.shop?.main.text || theme.palette.text.primary,
@@ -69,13 +74,19 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         selectItem: {
             fontSize: 16
-        }
+        },
+        infoIcon: {
+            marginLeft: 4,
+            opacity: 0.8,
+            height: 20,
+            width: 20
+        },
     }),
 );
 
 const CartSummary: React.FC<CartSummaryProps> = ({ className, onProceed }) => {
     const classes = useStyles();
-    const { shippingPrice, totalPrice, shippingCountry, setShippingCountry, availibleShippingCountries } = useContext(ShopContext);
+    const { shippingPrice, totalPrice, shippingCountry, setShippingCountry, availibleShippingCountries, shippingInfo } = useContext(ShopContext);
 
     return (
         <div className={clsx(classes.root, className)}>
@@ -85,7 +96,9 @@ const CartSummary: React.FC<CartSummaryProps> = ({ className, onProceed }) => {
                 <div className={classes.rowValue}>{formatCurrency(totalPrice)}</div>
             </div>
             <div className={classes.summaryRow}>
-                <div className={classes.rowTitle}>Shipping</div>
+                <div className={classes.rowTitle}>Shipping
+                    {shippingInfo && <Tooltip placement='right-start' title={shippingInfo}><InfoIcon className={classes.infoIcon} /></Tooltip>}
+                </div>
                 <div className={classes.rowValue}>{formatCurrency(shippingPrice)}</div>
             </div>
             <div className={classes.summaryRow}>

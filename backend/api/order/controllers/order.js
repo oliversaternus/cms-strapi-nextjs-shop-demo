@@ -6,9 +6,32 @@
  */
 
 const { parseMultipartData, sanitizeEntity } = require('strapi-utils');
+const fetch = require('node-fetch');
+const querystring = require('querystring');
 
-const validateCaptcha = async (token) => {
-    return true;
+const validateCaptcha = async (token, secret) => {
+    try {
+        const response = await fetch('https://www.google.com/recaptcha/api/siteverify?' + querystring.stringify({
+            secret: secret,
+            response: token
+        }), {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST'
+        })
+        if (!response || response.status !== 200) {
+            return false;
+        }
+        const parsedResponse = await response.json();
+
+        if (parsedResponse && parsedResponse.success) {
+            return true;
+        }
+        return false;
+    } catch (e) {
+        return false;
+    }
 };
 
 module.exports = {
@@ -16,7 +39,7 @@ module.exports = {
         const integrations = await strapi.services.integrations.find();
         if (integrations.ReCaptcha && integrations.ReCaptcha.enabled) {
             const captchaToken = ctx.query.captchaToken;
-            const validated = await validateCaptcha(captchaToken);
+            const validated = await validateCaptcha(captchaToken, integrations.ReCaptcha.secret);
             if (!validated) {
                 return ctx.badRequest(
                     null,

@@ -21,7 +21,8 @@ const useStyles = makeStyles(() =>
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'flex-start',
-            height: '100%'
+            height: '100%',
+            width: '100%',
         },
         container: {
             display: 'flex',
@@ -79,6 +80,7 @@ const useStyles = makeStyles(() =>
             paddingTop: 16,
             width: '100%',
             display: 'flex',
+            flexWrap: 'wrap',
             flexDirection: 'row',
             justifyContent: 'flex-end',
         },
@@ -120,6 +122,10 @@ const useStyles = makeStyles(() =>
             container: {
                 flexDirection: 'column',
                 paddingBottom: 24
+            },
+            message: {
+                paddingLeft: 0,
+                paddingRight: 0
             }
         }
     }),

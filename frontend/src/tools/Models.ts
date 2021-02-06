@@ -46,6 +46,7 @@ export type ShopConfig = {
     currency?: 'EUR' | 'Dollar' | 'Pound' | 'Yen',
     maxQuantity?: number;
     checkoutMessage?: string;
+    shippingInfo?: string;
     shipping?: Array<{
         id: number;
         countries: string[];
@@ -60,6 +61,7 @@ export type NavigationArea = Array<{
         id: number;
         link?: string;
         path?: string;
+        imageUrl?: string;
     }>;
 }>;
 

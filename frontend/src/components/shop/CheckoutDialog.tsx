@@ -1,7 +1,7 @@
 import React, { useState, useContext, useMemo, useCallback } from 'react';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import Dialog from '../styledComponents/StyledDialog';
-import { Button } from '@material-ui/core';
+import { Button, useMediaQuery } from '@material-ui/core';
 import { parse } from 'marked';
 import { Order } from '../../tools/Models';
 import { ShopContext } from '../../contexts/ShopContext';
@@ -18,15 +18,16 @@ const useStyles = makeStyles(() =>
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'flex-start',
-            height: '100%'
+            height: '100%',
+            width: '100%',
         },
         container: {
-            padding: 8,
-            width: 420,
+            width: '100%',
             display: 'flex',
             alignItems: 'flex-start',
             justifyContent: 'flex-start',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            padding: 12,
         },
         input: {
             width: '100%',
@@ -38,11 +39,13 @@ const useStyles = makeStyles(() =>
         captchaContainer: {
             margin: 8,
             marginLeft: 0,
-            marginRight: 0
+            marginRight: 0,
+            width: '100%',
         },
         message: {
             paddingTop: 16,
             paddingBottom: 8,
+            width: '100%',
             maxWidth: 420,
             '& h1': {
                 fontSize: 20,
@@ -97,9 +100,7 @@ const useStyles = makeStyles(() =>
         },
         '@media (max-width: 800px)': {
             container: {
-                width: 'auto',
-                flexDirection: 'column',
-                paddingBottom: 24
+                padding: 0
             }
         }
     }),
@@ -111,6 +112,8 @@ const CheckoutDialog: React.FC<{ message?: string; open: boolean; onClose: () =>
     const { items: cartItems, totalPrice, shippingCountry, shippingPrice } = useContext(ShopContext);
     const { captcha } = useContext(IntegrationsContext);
     const { openNotification } = useContext(NotificationContext);
+    const smallScreen = useMediaQuery('(max-width: 480px)');
+    const tinyScreen = useMediaQuery('(max-width: 370px)');
     const [captchaCode, setCaptchaCode] = useState('');
     const [customer, setCustomer] = useState<{ email: string; firstName: string; lastName: string }>({
         firstName: '',
@@ -153,8 +156,9 @@ const CheckoutDialog: React.FC<{ message?: string; open: boolean; onClose: () =>
             title="Submit Order"
             open={open}
             onClose={onClose}
-            preventFullScreen
+            preventFullScreen={!smallScreen}
             transition='slide'
+
         >
             <div className={classes.root}>
                 <div className={classes.container}>
@@ -185,6 +189,8 @@ const CheckoutDialog: React.FC<{ message?: string; open: boolean; onClose: () =>
                     {captcha.enabled &&
                         <div className={classes.captchaContainer}>
                             <ReCAPTCHA
+                                size={tinyScreen ? 'compact' : 'normal'}
+                                key={tinyScreen + ''}
                                 sitekey={captcha.publicKey || ''}
                                 onChange={(token) => setCaptchaCode(token || '')}
                             />
