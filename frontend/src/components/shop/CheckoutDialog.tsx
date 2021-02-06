@@ -8,6 +8,8 @@ import { ShopContext } from '../../contexts/ShopContext';
 import { NotificationContext } from '../../contexts/NotificationContext';
 import { createOrder } from '../../tools/Service';
 import StyledInput from '../styledComponents/StyledInput';
+import ReCAPTCHA from "react-google-recaptcha";
+import { IntegrationsContext } from '../../contexts/IntegrationsContext';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -19,6 +21,7 @@ const useStyles = makeStyles(() =>
             height: '100%'
         },
         container: {
+            padding: 8,
             width: 420,
             display: 'flex',
             alignItems: 'flex-start',
@@ -32,8 +35,14 @@ const useStyles = makeStyles(() =>
             marginLeft: 0,
             marginRight: 0
         },
+        captchaContainer: {
+            margin: 8,
+            marginLeft: 0,
+            marginRight: 0
+        },
         message: {
-            padding: 16,
+            paddingTop: 16,
+            paddingBottom: 8,
             maxWidth: 420,
             '& h1': {
                 fontSize: 20,
@@ -83,6 +92,9 @@ const useStyles = makeStyles(() =>
         button: {
             marginLeft: 16
         },
+        textField: {
+            fontSize: 16
+        },
         '@media (max-width: 800px)': {
             container: {
                 width: 'auto',
@@ -97,7 +109,9 @@ const CheckoutDialog: React.FC<{ message?: string; open: boolean; onClose: () =>
     const classes = useStyles();
     const parsedMessage = useMemo(() => parse(message || ''), [message]);
     const { items: cartItems, totalPrice, shippingCountry, shippingPrice } = useContext(ShopContext);
+    const { captcha } = useContext(IntegrationsContext);
     const { openNotification } = useContext(NotificationContext);
+    const [captchaCode, setCaptchaCode] = useState('');
     const [customer, setCustomer] = useState<{ email: string; firstName: string; lastName: string }>({
         firstName: '',
         lastName: '',
@@ -107,6 +121,10 @@ const CheckoutDialog: React.FC<{ message?: string; open: boolean; onClose: () =>
     const sendOrder = useCallback(async () => {
         if (!customer.email || !customer.firstName || !customer.lastName || !shippingCountry || !cartItems || !cartItems.length) {
             openNotification('error', 'Order form incomplete');
+            return;
+        }
+        if (captcha?.enabled && !captchaCode) {
+            openNotification('error', 'Please solve the captcha');
             return;
         }
         const order: Order = {
@@ -121,14 +139,14 @@ const CheckoutDialog: React.FC<{ message?: string; open: boolean; onClose: () =>
                 quantity: cartItem.quantity
             }))
         };
-        const response = await createOrder(order);
+        const response = await createOrder(order, captchaCode);
         if (response.isError) {
             openNotification('error', 'Order couldn\'t be placed');
             return;
         }
         openNotification('success', 'Order created. Check your inbox');
         onClose();
-    }, [customer, shippingCountry, shippingPrice, cartItems, totalPrice]);
+    }, [customer, shippingCountry, shippingPrice, cartItems, totalPrice, captcha, captchaCode]);
 
     return (
         <Dialog
@@ -147,23 +165,33 @@ const CheckoutDialog: React.FC<{ message?: string; open: boolean; onClose: () =>
                         placeholder='First Name'
                         className={classes.input}
                         value={customer?.firstName}
+                        inputClass={classes.textField}
                         onChange={(e) => setCustomer({ ...customer, firstName: e.target?.value })}
                     />
                     <StyledInput
                         placeholder='Last Name'
                         className={classes.input}
                         value={customer?.lastName}
+                        inputClass={classes.textField}
                         onChange={(e) => setCustomer({ ...customer, lastName: e.target?.value })}
                     />
                     <StyledInput
                         placeholder='Email'
                         className={classes.input}
                         value={customer?.email}
+                        inputClass={classes.textField}
                         onChange={(e) => setCustomer({ ...customer, email: e.target?.value })}
                     />
+                    {captcha.enabled &&
+                        <div className={classes.captchaContainer}>
+                            <ReCAPTCHA
+                                sitekey={captcha.publicKey || ''}
+                                onChange={(token) => setCaptchaCode(token || '')}
+                            />
+                        </div>}
                 </div>
                 <div className={classes.buttonsContainer}>
-                    <Button className={classes.button} variant="contained" color="secondary" onClick={sendOrder}>Send</Button>
+                    <Button className={classes.button} variant="contained" color="secondary" onClick={sendOrder}>Submit</Button>
                 </div>
             </div>
         </Dialog>

@@ -129,7 +129,7 @@ const useStyles = makeStyles((theme) =>
 const CartPage: NextPage<{ page: Page }> = ({ page }) => {
     const { id, content } = page;
     const classes = useStyles();
-    const { items: cartItems, setQuantity, maxQuantity, removeFromCart } = useContext(ShopContext);
+    const { items: cartItems, setQuantity, maxQuantity, removeFromCart, checkoutMessage } = useContext(ShopContext);
     const [checkoutOpen, setCheckoutOpen] = useState(false);
 
     const quantities = useMemo(() => {
@@ -206,7 +206,7 @@ const CartPage: NextPage<{ page: Page }> = ({ page }) => {
                 </div>
                 <CartSummary className={classes.cartSummary} onProceed={handleCheckoutOpen} />
             </div>
-            <CheckoutDialog open={checkoutOpen} onClose={handleCheckoutClose} />
+            <CheckoutDialog open={checkoutOpen} onClose={handleCheckoutClose} message={checkoutMessage} />
         </div>);
 }
 

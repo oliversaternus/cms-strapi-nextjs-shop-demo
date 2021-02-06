@@ -10,6 +10,7 @@ export const ShopContext = React.createContext<{
     shippingPrice: number;
     shippingCountry: string;
     availibleShippingCountries: string[];
+    checkoutMessage?: string;
     addToCart: (product: Product) => boolean;
     removeFromCart: (cartId: string) => void;
     setQuantity: (cartId: string, quantity: number) => boolean;
@@ -159,7 +160,8 @@ export const ShopContextProvider: React.FC<{ config: ShopConfig }> = ({ children
             setShippingCountry,
             availibleShippingCountries,
             maxQuantity,
-            shippingPrice
+            shippingPrice,
+            checkoutMessage: config.checkoutMessage
         }}>
             {children}
         </ShopContext.Provider>

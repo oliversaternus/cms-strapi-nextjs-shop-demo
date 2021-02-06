@@ -5,4 +5,16 @@
  * to customize this controller
  */
 
-module.exports = {};
+const { sanitizeEntity } = require('strapi-utils');
+
+module.exports = {
+    async find() {
+        let entity = await strapi.services.integrations.find();
+
+        if (entity.ReCaptcha && entity.ReCaptcha.secret) {
+            delete entity.ReCaptcha.secret;
+        }
+
+        return sanitizeEntity(entity, { model: strapi.models.integrations });
+    },
+};

@@ -27,6 +27,9 @@
     },
     "maxQuantity": {
       "type": "integer"
+    },
+    "checkoutMessage": {
+      "type": "richtext"
     }
   }
 }

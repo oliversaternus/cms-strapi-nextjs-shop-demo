@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_integrations_re_captchas",
+  "info": {
+    "name": "reCaptcha",
+    "icon": "mouse-pointer"
+  },
+  "options": {},
+  "attributes": {
+    "enabled": {
+      "type": "boolean"
+    },
+    "publicKey": {
+      "type": "string"
+    },
+    "secret": {
+      "type": "string"
+    }
+  }
+}

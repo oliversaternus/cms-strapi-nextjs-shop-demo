@@ -17,6 +17,7 @@ import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandIcon from '@material-ui/icons/ArrowDropDown';
 import Typography from '@material-ui/core/Typography';
 import CartMenu from './shop/CartMenu';
+import CartLink from './shop/CartLink';
 
 const Accordion = withStyles({
     root: {
@@ -339,7 +340,7 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
                 icon={
                     <div className={classes.logo}>
                         <Link href="/">
-                            <a className={classes.homeLink} style={{ padding: 12, paddingTop: 4 }}>
+                            <a className={classes.homeLink} style={{ padding: 12, paddingTop: 4 }} onClick={handleCloseMenu}>
                                 <img src={logoSrc} className={classes.logoImage} />
                             </a>
                         </Link>
@@ -366,6 +367,7 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
                             <a className={clsx(classes.link, classes.mobile)} onClick={handleCloseMenu}>{link.title}</a>
                         </Link>
                     )}
+                    <CartLink cartURL="/cart" className={clsx(classes.link, classes.mobile)} onClick={handleCloseMenu} />
                 </div>
             </Dialog>
         </React.Fragment >

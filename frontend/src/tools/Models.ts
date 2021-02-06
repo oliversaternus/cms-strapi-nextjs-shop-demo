@@ -45,6 +45,7 @@ export type ShopConfig = {
     id?: number;
     currency?: 'EUR' | 'Dollar' | 'Pound' | 'Yen',
     maxQuantity?: number;
+    checkoutMessage?: string;
     shipping?: Array<{
         id: number;
         countries: string[];
@@ -286,12 +287,16 @@ export type Integrations = {
         cookieValue?: string;
         anonymousTracking?: boolean;
         enabled?: boolean;
-    },
+    };
     Chat?: {
         id: number;
         TawkToID?: string;
         cookieValue?: string;
         enabled?: boolean;
+    };
+    ReCaptcha?: {
+        enabled?: boolean;
+        publicKey?: string;
     }
 }
 

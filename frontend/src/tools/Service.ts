@@ -64,8 +64,8 @@ export const createMessage = async (message: Message): Promise<Response<boolean>
     return await invokeApi('/messages', '', 'POST', { ...message }, true);
 };
 
-export const createOrder = async (order: Order): Promise<Response<boolean>> => {
-    return await invokeApi('/orders', '', 'POST', { ...order }, true);
+export const createOrder = async (order: Order, captchaToken: string): Promise<Response<boolean>> => {
+    return await invokeApi('/orders', `?captchaToken=${captchaToken}`, 'POST', { ...order }, true);
 };
 
 export const getProduct = async (id: number): Promise<Response<Product>> => {

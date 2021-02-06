@@ -216,9 +216,7 @@ const CookieDialog: React.FC<{ message?: string, configuration?: CookieOptionsCo
                             <Button variant="contained" color="primary" onClick={accept}>Save</Button> :
                             <Button variant="text" color="primary" onClick={openSettings}>Settings</Button>
                         }
-                        <Button className={classes.button} variant="contained" color="secondary" onClick={acceptAll}>
-                            {settingsOpen ? 'Accept All' : 'Accept'}
-                        </Button>
+                        <Button className={classes.button} variant="contained" color="secondary" onClick={acceptAll}>Accept All</Button>
                     </div> :
                     <div className={classes.buttonsContainer}>
                         <Button className={classes.button} variant="contained" color="secondary" onClick={acceptAll}>OK</Button>

@@ -2,7 +2,8 @@
   "kind": "singleType",
   "collectionName": "integrations",
   "info": {
-    "name": "Integrations"
+    "name": "Integrations",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -19,6 +20,11 @@
       "type": "component",
       "repeatable": false,
       "component": "integrations.chat"
+    },
+    "ReCaptcha": {
+      "type": "component",
+      "repeatable": false,
+      "component": "integrations.re-captcha"
     }
   }
 }

@@ -10,6 +10,7 @@ import { CircularProgress } from '@material-ui/core';
 import cookies from 'next-cookies';
 import CookieMessage from '../src/components/CookieMessage';
 import { CookieContextProvider, AcceptCookieType } from '../src/contexts/CookieContext';
+import { IntegrationsContextProvider } from '../src/contexts/IntegrationsContext';
 import { ShopContextProvider } from '../src/contexts/ShopContext';
 import Analytics, { ReactGA } from '../src/tools/Analytics';
 import Chat from '../src/tools/Chat';
@@ -40,6 +41,7 @@ function CustomApp(props: ExtendedAppProps) {
   const { Component, pageProps, documentCookies, globalData, integrations, cookieConfig, shopConfig } = props;
   const { navigation, footer, logo, favicon, copyright, previewImage } = globalData;
   const [isLoading, setIsLoading] = useState(false);
+
   const initialCookies = useMemo(() => {
     try {
       // documentCookies should be already parsed
@@ -113,45 +115,47 @@ function CustomApp(props: ExtendedAppProps) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <CookieContextProvider initialValue={initialCookies} session={documentCookies.sessionId}>
-          <NotificationContextProvider>
-            <ShopContextProvider config={shopConfig}>
-              {integrations.Analytics?.enabled &&
-                <Analytics
-                  trackingID={integrations.Analytics.GATrackingID}
-                  cookieValue={integrations.Analytics.cookieValue}
+          <IntegrationsContextProvider integrations={integrations}>
+            <NotificationContextProvider>
+              <ShopContextProvider config={shopConfig}>
+                {integrations.Analytics?.enabled &&
+                  <Analytics
+                    trackingID={integrations.Analytics.GATrackingID}
+                    cookieValue={integrations.Analytics.cookieValue}
+                  />
+                }
+                {integrations.Chat?.enabled &&
+                  <Chat
+                    tawkToID={integrations.Chat.TawkToID}
+                    cookieValue={integrations.Chat.cookieValue}
+                  />
+                }
+                {isLoading &&
+                  <div
+                    className="loading-overlay"
+                    style={{ background: theme.palette.backgrounds.main }}
+                  >
+                    <CircularProgress color='secondary' />
+                  </div>
+                }
+                {(!initialCookies || initialCookies?.none === true) &&
+                  cookieConfig.enabled &&
+                  <CookieMessage {...cookieConfig} />
+                }
+                <Navigation
+                  logoSrc={logo?.url}
+                  links={navigation}
                 />
-              }
-              {integrations.Chat?.enabled &&
-                <Chat
-                  tawkToID={integrations.Chat.TawkToID}
-                  cookieValue={integrations.Chat.cookieValue}
+                <Component {...pageProps} />
+                <Footer
+                  logoSrc={logo?.url}
+                  columns={footer}
+                  copyright={copyright}
                 />
-              }
-              {isLoading &&
-                <div
-                  className="loading-overlay"
-                  style={{ background: theme.palette.backgrounds.main }}
-                >
-                  <CircularProgress color='secondary' />
-                </div>
-              }
-              {(!initialCookies || initialCookies?.none === true) &&
-                cookieConfig.enabled &&
-                <CookieMessage {...cookieConfig} />
-              }
-              <Navigation
-                logoSrc={logo?.url}
-                links={navigation}
-              />
-              <Component {...pageProps} />
-              <Footer
-                logoSrc={logo?.url}
-                columns={footer}
-                copyright={copyright}
-              />
-              <base target='_blank'></base>
-            </ShopContextProvider>
-          </NotificationContextProvider>
+                <base target='_blank'></base>
+              </ShopContextProvider>
+            </NotificationContextProvider>
+          </IntegrationsContextProvider>
         </CookieContextProvider>
       </ThemeProvider>
     </React.Fragment>
