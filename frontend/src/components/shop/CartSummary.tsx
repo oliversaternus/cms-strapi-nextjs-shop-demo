@@ -11,6 +11,7 @@ import { getName } from 'country-list';
 
 type CartSummaryProps = {
     className?: string;
+    onProceed: () => void;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -72,9 +73,9 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const CartSummary: React.FC<CartSummaryProps> = ({ className }) => {
+const CartSummary: React.FC<CartSummaryProps> = ({ className, onProceed }) => {
     const classes = useStyles();
-    const { items: cartItems, totalQuantity, removeFromCart, totalPrice, clientCountry, setShippingCountry, availibleShippingCountries } = useContext(ShopContext);
+    const { shippingPrice, totalPrice, shippingCountry, setShippingCountry, availibleShippingCountries } = useContext(ShopContext);
 
     return (
         <div className={clsx(classes.root, className)}>
@@ -85,7 +86,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({ className }) => {
             </div>
             <div className={classes.summaryRow}>
                 <div className={classes.rowTitle}>Shipping</div>
-                <div className={classes.rowValue}>{formatCurrency(20)}</div>
+                <div className={classes.rowValue}>{formatCurrency(shippingPrice)}</div>
             </div>
             <div className={classes.summaryRow}>
                 <div className={classes.rowTitle} style={{ paddingBottom: 12 }}>Shipping Country</div>
@@ -94,7 +95,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({ className }) => {
                         className={classes.selectRoot}
                         selectClass={classes.select}
                         menuItemClass={classes.selectItem}
-                        value={clientCountry}
+                        value={shippingCountry}
                         onChange={(event) => setShippingCountry(event.target.value)}
                         values={availibleShippingCountries.map(code => (
                             {
@@ -107,7 +108,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({ className }) => {
                 </div>
             </div>
 
-            <Button _color='primary' className={classes.proceedButton} fullWidth color='primary' onClick={() => undefined}>Proceed to Checkout</Button>
+            <Button _color='primary' className={classes.proceedButton} fullWidth color='primary' onClick={onProceed}>Proceed to Checkout</Button>
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import { Post, PostQuery, Response, Page, Message, GlobalData, Integrations, CookieConfig, Product, ProductQuery, ShopConfig } from './Models';
+import { Post, PostQuery, Response, Page, Message, GlobalData, Integrations, CookieConfig, Product, ProductQuery, ShopConfig, Order } from './Models';
 import { stringify } from 'qs';
 
 export const apiBaseUrl = 'http://localhost:1337';
@@ -60,8 +60,12 @@ export const getShopConfig = async (): Promise<Response<ShopConfig>> => {
     return await invokeApi('/shop', '', 'GET', undefined, true);
 };
 
-export const createMessage = async (message: Message): Promise<Response<Page>> => {
+export const createMessage = async (message: Message): Promise<Response<boolean>> => {
     return await invokeApi('/messages', '', 'POST', { ...message }, true);
+};
+
+export const createOrder = async (order: Order): Promise<Response<boolean>> => {
+    return await invokeApi('/orders', '', 'POST', { ...order }, true);
 };
 
 export const getProduct = async (id: number): Promise<Response<Product>> => {

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useCallback } from 'react';
+import React, { useContext, useMemo, useCallback, useState } from 'react';
 import { NextPage } from 'next';
 import { createStyles, makeStyles, fade } from '@material-ui/core/styles';
 import { CartItem, Page } from '../src/tools/Models';
@@ -14,6 +14,7 @@ import { DeleteForever as DeleteIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { IconButton } from '@material-ui/core';
+import CheckoutDialog from '../src/components/shop/CheckoutDialog';
 
 const useStyles = makeStyles((theme) =>
     createStyles({
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme) =>
             alignItems: 'flex-start',
             justifyContent: 'space-between'
         },
-        content: {
+        contentContainer: {
             flexGrow: 1,
             padding: 32,
             paddingTop: 0,
@@ -53,7 +54,7 @@ const useStyles = makeStyles((theme) =>
         },
         cartItemContainer: {
             display: 'flex',
-            marginBottom: 12
+            marginTop: 12
         },
         cartItemImage: {
             height: 128,
@@ -89,6 +90,38 @@ const useStyles = makeStyles((theme) =>
         },
         deleteButton: {
             marginLeft: 6
+        },
+        '@media (max-width: 1080px)': {
+            contentContainer: {
+                paddingRight: 0,
+                width: '100%'
+            },
+            container: {
+                flexDirection: 'column'
+            },
+            cartSummary: {
+                maxWidth: 1080,
+                width: '100%',
+            }
+        },
+        '@media (max-width: 640px)': {
+            cartItemContainer: {
+                flexDirection: 'column'
+            },
+            quantityCell: {
+                justifyContent: 'flex-start'
+            },
+            priceCell: {
+                justifyContent: 'flex-start'
+            },
+            cartItemCell: {
+                paddingTop: 12,
+                paddingBottom: 12
+            },
+            cartItemImage: {
+                height: 196,
+                width: 196
+            }
         }
     }),
 );
@@ -97,6 +130,7 @@ const CartPage: NextPage<{ page: Page }> = ({ page }) => {
     const { id, content } = page;
     const classes = useStyles();
     const { items: cartItems, setQuantity, maxQuantity, removeFromCart } = useContext(ShopContext);
+    const [checkoutOpen, setCheckoutOpen] = useState(false);
 
     const quantities = useMemo(() => {
         const result = [];
@@ -114,6 +148,9 @@ const CartPage: NextPage<{ page: Page }> = ({ page }) => {
         removeFromCart(cartItem.id);
     }, []);
 
+    const handleCheckoutOpen = () => setCheckoutOpen(true);
+    const handleCheckoutClose = () => setCheckoutOpen(false);
+
     /*
     if (!id) {
         return <Error />;
@@ -123,7 +160,7 @@ const CartPage: NextPage<{ page: Page }> = ({ page }) => {
     return (
         <div className={classes.root}>
             <div className={classes.container}>
-                <div className={classes.content}>
+                <div className={classes.contentContainer}>
                     <div className={classes.cartTitle}>Cart</div>
                     {cartItems.map(item => (
                         <Grid container className={classes.cartItemContainer} key={item.id}>
@@ -167,8 +204,9 @@ const CartPage: NextPage<{ page: Page }> = ({ page }) => {
                         </Grid>))
                     }
                 </div>
-                <CartSummary className={classes.cartSummary} />
+                <CartSummary className={classes.cartSummary} onProceed={handleCheckoutOpen} />
             </div>
+            <CheckoutDialog open={checkoutOpen} onClose={handleCheckoutClose} />
         </div>);
 }
 

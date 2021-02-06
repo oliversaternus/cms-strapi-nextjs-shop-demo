@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_shop_order_items",
+  "info": {
+    "name": "OrderItem",
+    "icon": "archive"
+  },
+  "options": {},
+  "attributes": {
+    "product": {
+      "model": "product"
+    },
+    "quantity": {
+      "type": "integer"
+    }
+  }
+}

@@ -321,3 +321,16 @@ export type ProductQuery = {
     _limit?: number;
     _start?: number;
 };
+
+export type Order = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    shippingCountry: string;
+    totalPrice: number;
+    shippingPrice: number;
+    items: Array<{
+        product: Product,
+        quantity: number
+    }>;
+};

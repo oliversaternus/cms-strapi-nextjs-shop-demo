@@ -7,7 +7,8 @@ export const ShopContext = React.createContext<{
     totalPrice: number;
     totalQuantity: number;
     maxQuantity: number;
-    clientCountry: string;
+    shippingPrice: number;
+    shippingCountry: string;
     availibleShippingCountries: string[];
     addToCart: (product: Product) => boolean;
     removeFromCart: (cartId: string) => void;
@@ -19,7 +20,8 @@ export const ShopContext = React.createContext<{
         totalPrice: 0,
         totalQuantity: 0,
         maxQuantity: 10,
-        clientCountry: '',
+        shippingPrice: 0,
+        shippingCountry: '',
         availibleShippingCountries: [],
         addToCart: () => true,
         removeFromCart: () => undefined,
@@ -38,9 +40,17 @@ export const ShopContextProvider: React.FC<{ config: ShopConfig }> = ({ children
     }, [config]);
 
     const [items, setItems] = useState<CartItem[]>([]);
-    const [clientCountry, setClientCountry] = useState(availibleShippingCountries[0] || 'DE');
+    const [shippingCountry, setshippingCountry] = useState(availibleShippingCountries[0] || 'DE');
 
     const maxQuantity = useMemo(() => config.maxQuantity || 10, [config, config.maxQuantity]);
+
+    const shippingPrice = useMemo(() => {
+        const foundIndex = config.shipping?.findIndex(shippingItem => shippingItem.countries.includes(shippingCountry));
+        if (foundIndex !== undefined && foundIndex !== -1) {
+            return config.shipping?.[foundIndex].price || 0;
+        }
+        return 0;
+    }, [config, shippingCountry]);
 
     const loadItems = useCallback<() => CartItem[] | undefined>(() => {
         if (window && window.localStorage) {
@@ -127,7 +137,7 @@ export const ShopContextProvider: React.FC<{ config: ShopConfig }> = ({ children
     }, [items]);
 
     const setShippingCountry = useCallback<(country: string) => void>((country) => {
-        setClientCountry(country);
+        setshippingCountry(country);
     }, []);
 
     useEffect(
@@ -145,10 +155,11 @@ export const ShopContextProvider: React.FC<{ config: ShopConfig }> = ({ children
             addToCart,
             removeFromCart,
             setQuantity,
-            clientCountry,
+            shippingCountry,
             setShippingCountry,
             availibleShippingCountries,
-            maxQuantity
+            maxQuantity,
+            shippingPrice
         }}>
             {children}
         </ShopContext.Provider>
