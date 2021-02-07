@@ -2,13 +2,11 @@
   "collectionName": "components_section_cards",
   "info": {
     "name": "Cards",
-    "icon": "images"
+    "icon": "images",
+    "description": ""
   },
   "options": {},
   "attributes": {
-    "heading": {
-      "type": "richtext"
-    },
     "cards": {
       "type": "component",
       "repeatable": true,
@@ -16,6 +14,9 @@
     },
     "identifier": {
       "type": "string"
+    },
+    "headline": {
+      "type": "text"
     }
   }
 }

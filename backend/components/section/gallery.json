@@ -2,13 +2,11 @@
   "collectionName": "components_section_galleries",
   "info": {
     "name": "Gallery",
-    "icon": "photo-video"
+    "icon": "photo-video",
+    "description": ""
   },
   "options": {},
   "attributes": {
-    "heading": {
-      "type": "richtext"
-    },
     "images": {
       "collection": "file",
       "via": "related",
@@ -20,8 +18,11 @@
       "plugin": "upload",
       "required": false
     },
-	"identifier": {
+    "identifier": {
       "type": "string"
+    },
+    "headline": {
+      "type": "text"
     }
   }
 }

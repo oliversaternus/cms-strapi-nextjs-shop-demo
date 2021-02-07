@@ -2,12 +2,13 @@
   "collectionName": "components_section_locations",
   "info": {
     "name": "Location",
-    "icon": "map-marker-alt"
+    "icon": "map-marker-alt",
+    "description": ""
   },
   "options": {},
   "attributes": {
     "headline": {
-      "type": "string"
+      "type": "text"
     },
     "name": {
       "type": "string"

@@ -182,7 +182,7 @@ export type CardsSection = {
     id: number;
     identifier?: string;
     cards: CardsSectionItem[];
-    heading?: string;
+    headline?: string;
 };
 
 export type CardsSectionItem = {
@@ -236,14 +236,14 @@ export type ContactSection = {
     __component: string;
     id: number;
     identifier?: string;
-    heading?: string;
+    headline?: string;
 };
 
 export type GallerySection = {
     __component: string;
     id: number;
     identifier?: string;
-    heading?: string;
+    headline?: string;
     images?: Image[];
 };
 

@@ -124,8 +124,8 @@ const Notification: React.FC<{}> = props => {
         <div className={classes.root}>
             <Snackbar
                 anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
+                    vertical: 'bottom',
+                    horizontal: 'left',
                 }}
                 open={open}
                 autoHideDuration={4000}

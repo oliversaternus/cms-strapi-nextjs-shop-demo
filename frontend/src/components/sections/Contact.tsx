@@ -1,10 +1,9 @@
-import React, { useCallback, useMemo, useState, useContext } from "react";
+import React, { useCallback, useState, useContext } from "react";
 import clsx from "clsx";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core";
 import { Message, ContactSection } from '../../tools/Models';
 import { createMessage } from '../../tools/Service';
-import { parse } from 'marked';
 import { NotificationContext } from '../../contexts/NotificationContext';
 import StyledInput from '../styledComponents/StyledInput';
 import Button from '../styledComponents/StyledButton';
@@ -46,65 +45,16 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     right: {
         flexDirection: 'row-reverse'
     },
-    heading: {
-        color: theme.palette.sectionStyles.contact?.text || theme.palette.text.primary,
-        '& h1': {
-            paddingTop: 6,
-            paddingBottom: 6,
-            margin: 0,
-            fontSize: 32,
-            fontWeight: 500
-        },
-        '& h2': {
-            paddingTop: 6,
-            paddingBottom: 6,
-            margin: 0,
-            fontSize: 32,
-            fontWeight: 500
-        },
-        '& h3': {
-            paddingTop: 6,
-            paddingBottom: 6,
-            margin: 0,
-            fontSize: 32,
-            fontWeight: 500
-        },
-        '& h4': {
-            paddingTop: 6,
-            paddingBottom: 6,
-            margin: 0,
-            fontSize: 32,
-            fontWeight: 500
-        },
-        '& h5': {
-            paddingTop: 6,
-            paddingBottom: 6,
-            margin: 0,
-            fontSize: 32,
-            fontWeight: 500
-        },
-        '& p': {
-            margin: 0,
-            fontSize: 16,
-            fontWeight: 300,
-            color: theme.palette.sectionStyles.contact?.text || theme.palette.text.primary
-        },
-        '& ul': {
-            margin: 0,
-            paddingBottom: 32,
-            fontSize: 16,
-            fontWeight: 300,
-            color: theme.palette.sectionStyles.contact?.text || theme.palette.text.primary,
-            paddingLeft: 18
-        },
-        '& ol': {
-            margin: 0,
-            paddingBottom: 32,
-            fontSize: 16,
-            fontWeight: 300,
-            color: theme.palette.sectionStyles.contact?.text || theme.palette.text.primary,
-            paddingLeft: 18
-        }
+    headline: {
+        width: '100%',
+        maxWidth: 1016,
+        paddingTop: 6,
+        paddingBottom: 12,
+        margin: 0,
+        fontSize: 40,
+        fontWeight: 600,
+        lineHeight: 1.2,
+        color: theme.palette.sectionStyles.gallery?.text || theme.palette.text.primary
     },
     input: {
         width: '100%',
@@ -117,21 +67,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     sendButton: {
         marginTop: 12
     },
-    headline: {
-        width: '50%',
-        maxWidth: 380,
-        fontSize: 32,
-        fontWeight: 600,
-        lineHeight: 1.2,
-        color: theme.palette.sectionStyles.contact?.text || theme.palette.text.primary
-    },
     '@media (max-width: 1000px)': {
         textContent: {
             width: '100%'
-        },
-        headline: {
-            width: '100%',
-            paddingBottom: 24
         }
     },
     '@media (max-width: 800px)': {
@@ -139,6 +77,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
             padding: 32,
             paddingTop: 48,
             paddingBottom: 48
+        },
+        headline: {
+            fontSize: 28
         }
     }
 }));
@@ -146,7 +87,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 const Contact: React.FC<ContactProps> = (props) => {
     const { className, style, contact } = props;
     const classes = useStyles();
-    const parsedContent = useMemo(() => parse(contact.heading || ''), [contact]);
     const [message, setMessage] = useState<Message>({
         firstName: '',
         lastName: '',
@@ -189,7 +129,7 @@ const Contact: React.FC<ContactProps> = (props) => {
             id={contact.identifier}
         >
             <div className={classes.container}>
-                <div className={classes.heading} dangerouslySetInnerHTML={{ __html: parsedContent }}></div>
+                {contact.headline && <div className={classes.headline}>{contact.headline}</div>}
                 <StyledInput
                     placeholder='First Name'
                     className={classes.input}

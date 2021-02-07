@@ -310,15 +310,18 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
                                                 <ClickAwayListener onClickAway={() => setSelectedLinkId(undefined)}>
                                                     <MenuList>
                                                         {links?.[index]?.links?.map(item =>
-                                                            <MenuItem
-                                                                key={item.id}
-                                                                onClick={() => setSelectedLinkId(undefined)}
-                                                            >
-                                                                {item.imageUrl && <Avatar src={item.imageUrl} className={classes.linkAvatar}>{item.link?.[0]}</Avatar>}
-                                                                <Link href={item.path + ''} >
-                                                                    <a target="_self" className={clsx(classes.link, classes.menuLink)}>{item.link}</a>
-                                                                </Link>
-                                                            </MenuItem>
+                                                            <Link href={item.path + ''} >
+                                                                <a target="_self" className={clsx(classes.link, classes.menuLink)}>
+                                                                    <MenuItem
+                                                                        key={item.id}
+                                                                        onClick={() => setSelectedLinkId(undefined)}
+                                                                    >
+                                                                        {item.imageUrl && <Avatar src={item.imageUrl} className={classes.linkAvatar}>{item.link?.[0]}</Avatar>}
+
+                                                                        {item.link}
+                                                                    </MenuItem>
+                                                                </a>
+                                                            </Link>
                                                         )}
                                                     </MenuList>
                                                 </ClickAwayListener>

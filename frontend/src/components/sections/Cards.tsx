@@ -37,74 +37,16 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         flexWrap: 'wrap',
         color: theme.palette.sectionStyles.cards?.text || theme.palette.text.primary
     },
-    heading: {
+    headline: {
         width: '100%',
         maxWidth: 1016,
-        padding: 24,
-        paddingTop: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingBottom: 48,
-        color: theme.palette.sectionStyles.cards?.text || theme.palette.text.primary,
-        '& h1': {
-            paddingTop: 6,
-            paddingBottom: 6,
-            margin: 0,
-            fontSize: 32,
-            fontWeight: 500
-        },
-        '& h2': {
-            paddingTop: 6,
-            paddingBottom: 6,
-            margin: 0,
-            fontSize: 32,
-            fontWeight: 500
-        },
-        '& h3': {
-            paddingTop: 6,
-            paddingBottom: 6,
-            margin: 0,
-            fontSize: 32,
-            fontWeight: 500
-        },
-        '& h4': {
-            paddingTop: 6,
-            paddingBottom: 6,
-            margin: 0,
-            fontSize: 32,
-            fontWeight: 500
-        },
-        '& h5': {
-            paddingTop: 6,
-            paddingBottom: 6,
-            margin: 0,
-            fontSize: 32,
-            fontWeight: 500
-        },
-        '& p': {
-            margin: 0,
-            fontSize: 16,
-            fontWeight: 300,
-            color: theme.palette.sectionStyles.cards?.text || theme.palette.text.primary
-        },
-        '& ul': {
-            margin: 0,
-            paddingBottom: 32,
-            fontSize: 16,
-            fontWeight: 300,
-            color: theme.palette.sectionStyles.cards?.text || theme.palette.text.primary,
-            paddingLeft: 18
-        },
-        '& ol': {
-            margin: 0,
-            paddingBottom: 32,
-            fontSize: 16,
-            fontWeight: 300,
-            color: theme.palette.sectionStyles.cards?.text || theme.palette.text.primary,
-            paddingLeft: 18
-        }
+        paddingTop: 6,
+        paddingBottom: 12,
+        margin: 0,
+        fontSize: 40,
+        fontWeight: 600,
+        lineHeight: 1.2,
+        color: theme.palette.sectionStyles.gallery?.text || theme.palette.text.primary
     },
     '@media (max-width: 800px)': {
         root: {
@@ -112,8 +54,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
             paddingTop: 48,
             paddingBottom: 48
         },
-        heading: {
-            paddingBottom: 24
+        headline: {
+            fontSize: 28
         }
     }
 }));
@@ -279,12 +221,10 @@ const CardItem: React.FC<CardsItemProps> = (props) => {
 
 const Cards: React.FC<CardsProps> = (props) => {
     const { className, style, cards } = props;
-    const heading = cards?.heading;
     const classes = useStyles();
-    const parsedContent = useMemo(() => parse(heading || ''), [heading]);
     return (
         <div style={style} className={clsx(classes.root, className)} id={cards.identifier}>
-            <div className={classes.heading} dangerouslySetInnerHTML={{ __html: parsedContent }}></div>
+            {cards.headline && <div className={classes.headline}>{cards.headline}</div>}
             <div className={classes.content} >
                 {cards.cards.map(item => <CardItem key={item.id} item={item} identifier={cards.identifier} />)}
             </div>
