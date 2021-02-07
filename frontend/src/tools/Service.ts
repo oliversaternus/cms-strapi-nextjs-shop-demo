@@ -25,21 +25,6 @@ const invokeApi = async <T>(path: string, query: string, method: 'GET' | 'POST' 
     }
 };
 
-export const getPost = async (identifier: string): Promise<Response<Post>> => {
-    const query = stringify({ q: identifier }).substring(2);
-    return await invokeApi(`/posts/${query}`, '', 'GET', undefined, true);
-};
-
-export const getPosts = async (query: PostQuery): Promise<Response<Post[]>> => {
-    const _query = stringify(query);
-    return await invokeApi(`/posts${_query ? `?${_query}` : ''}`, '', 'GET', undefined, true);
-};
-
-export const countPosts = async (query: PostQuery): Promise<Response<number>> => {
-    const _query = stringify(query);
-    return await invokeApi(`/posts/count${_query ? `?${_query}` : ''}`, '', 'GET', undefined, true);
-};
-
 export const getPage = async (path: string): Promise<Response<Page>> => {
     return await invokeApi('/pages/' + path, '', 'GET', undefined, true);
 };
@@ -68,8 +53,9 @@ export const createOrder = async (order: Order, captchaToken: string): Promise<R
     return await invokeApi('/orders', `?captchaToken=${captchaToken}`, 'POST', { ...order }, true);
 };
 
-export const getProduct = async (id: number): Promise<Response<Product>> => {
-    return await invokeApi(`/products/${id}`, '', 'GET', undefined, true);
+export const getProduct = async (identifier: string): Promise<Response<Product>> => {
+    const query = stringify({ q: identifier }).substring(2);
+    return await invokeApi(`/products/${query}`, '', 'GET', undefined, true);
 };
 
 export const getProducts = async (query: ProductQuery): Promise<Response<Product[]>> => {

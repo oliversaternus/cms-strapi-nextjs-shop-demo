@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { randomHex } from '../tools/Utils';
-import { Product, CartItem, ShopConfig } from '../tools/Models';
+import { Product, CartItem, ShopConfig, Currency } from '../tools/Models';
 
 export const ShopContext = React.createContext<{
     items: CartItem[];
@@ -12,6 +12,7 @@ export const ShopContext = React.createContext<{
     availibleShippingCountries: string[];
     checkoutMessage?: string;
     shippingInfo?: string;
+    shopCurrency?: Currency;
     addToCart: (product: Product) => boolean;
     removeFromCart: (cartId: string) => void;
     setQuantity: (cartId: string, quantity: number) => boolean;
@@ -163,7 +164,8 @@ export const ShopContextProvider: React.FC<{ config: ShopConfig }> = ({ children
             maxQuantity,
             shippingPrice,
             checkoutMessage: config.checkoutMessage,
-            shippingInfo: config.shippingInfo
+            shippingInfo: config.shippingInfo,
+            shopCurrency: config.currency
         }}>
             {children}
         </ShopContext.Provider>

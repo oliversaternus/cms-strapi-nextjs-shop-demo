@@ -185,7 +185,7 @@ CustomApp.getInitialProps = async (appContext: AppContext): Promise<{ documentCo
         links: products.map(product => ({
           id: product.id,
           link: product.name || '',
-          path: '/product/' + product.id,
+          path: '/product/' + product.identifier,
           imageUrl: product.image?.formats.thumbnail.url
         })).filter(link => link.id && link.link && link.path)
       },

@@ -41,9 +41,11 @@ export type CookieConfig = {
     }>
 };
 
+export type Currency = 'Euro' | 'Dollar' | 'Pound' | 'Yen';
+
 export type ShopConfig = {
     id?: number;
-    currency?: 'EUR' | 'Dollar' | 'Pound' | 'Yen',
+    currency?: Currency,
     maxQuantity?: number;
     checkoutMessage?: string;
     shippingInfo?: string;
@@ -304,6 +306,7 @@ export type Integrations = {
 
 export type Product = {
     id: number;
+    identifier?: string;
     name?: string;
     description?: string;
     image?: Image;

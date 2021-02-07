@@ -9,9 +9,8 @@ const { sanitizeEntity } = require('strapi-utils');
 
 module.exports = {
     async findOne(ctx) {
-        const { id } = ctx.params;
-
-        const entity = await strapi.services.product.findOne({ id });
+        const { identifier } = ctx.params;
+        const entity = await strapi.services.product.findOne({ identifier });
         return sanitizeEntity(entity, { model: strapi.models.product });
     },
     async find(ctx) {

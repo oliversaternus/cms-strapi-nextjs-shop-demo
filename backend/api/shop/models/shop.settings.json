@@ -14,7 +14,7 @@
     "currency": {
       "type": "enumeration",
       "enum": [
-        "EUR",
+        "Euro",
         "Dollar",
         "Pound",
         "Yen"

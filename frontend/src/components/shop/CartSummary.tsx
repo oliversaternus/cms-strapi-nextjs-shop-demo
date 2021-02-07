@@ -81,25 +81,31 @@ const useStyles = makeStyles((theme: Theme) =>
             height: 20,
             width: 20
         },
+        divider: {
+            width: '100%',
+            paddingTop: 16,
+            borderBottom: `1px solid ${fade(theme.palette.componentStyles.shop?.main.text || theme.palette.text.primary, 0.2)}`,
+            marginBottom: 8
+        }
     }),
 );
 
 const CartSummary: React.FC<CartSummaryProps> = ({ className, onProceed }) => {
     const classes = useStyles();
-    const { shippingPrice, totalPrice, shippingCountry, setShippingCountry, availibleShippingCountries, shippingInfo } = useContext(ShopContext);
+    const { shippingPrice, totalPrice, shippingCountry, setShippingCountry, availibleShippingCountries, shippingInfo, shopCurrency } = useContext(ShopContext);
 
     return (
         <div className={clsx(classes.root, className)}>
             <div className={classes.title}>Order Summary</div>
             <div className={classes.summaryRow}>
-                <div className={classes.rowTitle}>Order Total</div>
-                <div className={classes.rowValue}>{formatCurrency(totalPrice)}</div>
+                <div className={classes.rowTitle}>Order Subtotal</div>
+                <div className={classes.rowValue}>{formatCurrency(totalPrice, shopCurrency)}</div>
             </div>
             <div className={classes.summaryRow}>
                 <div className={classes.rowTitle}>Shipping
                     {shippingInfo && <Tooltip placement='right-start' title={shippingInfo}><InfoIcon className={classes.infoIcon} /></Tooltip>}
                 </div>
-                <div className={classes.rowValue}>{formatCurrency(shippingPrice)}</div>
+                <div className={classes.rowValue}>{formatCurrency(shippingPrice, shopCurrency)}</div>
             </div>
             <div className={classes.summaryRow}>
                 <div className={classes.rowTitle} style={{ paddingBottom: 12 }}>Shipping Country</div>
@@ -119,6 +125,11 @@ const CartSummary: React.FC<CartSummaryProps> = ({ className, onProceed }) => {
                         )}
                     />
                 </div>
+            </div>
+            <div className={classes.divider} />
+            <div className={classes.summaryRow}>
+                <div className={classes.rowTitle}>Total</div>
+                <div className={classes.rowValue}>{formatCurrency(totalPrice + shippingPrice, shopCurrency)}</div>
             </div>
 
             <Button _color='primary' className={classes.proceedButton} fullWidth color='primary' onClick={onProceed}>Proceed to Checkout</Button>

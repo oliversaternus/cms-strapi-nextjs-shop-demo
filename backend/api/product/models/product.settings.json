@@ -54,6 +54,9 @@
     },
     "availible": {
       "type": "boolean"
+    },
+    "identifier": {
+      "type": "string"
     }
   }
 }

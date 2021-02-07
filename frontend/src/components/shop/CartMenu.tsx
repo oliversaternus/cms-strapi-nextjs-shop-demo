@@ -113,7 +113,7 @@ const CartMenu: React.FC<CartMenuProps> = ({ cartURL }) => {
     const classes = useStyles();
     const cartMenuRef = useRef<HTMLButtonElement>(null);
     const [cartMenuOpen, setCartMenuOpen] = useState(false);
-    const { items: cartItems, totalQuantity, removeFromCart } = useContext(ShopContext);
+    const { items: cartItems, totalQuantity, removeFromCart, shopCurrency } = useContext(ShopContext);
     const router = useRouter();
 
     const isOnCart = useMemo(() => router.pathname.startsWith('/cart'), [router, router.pathname]);
@@ -160,7 +160,7 @@ const CartMenu: React.FC<CartMenuProps> = ({ cartURL }) => {
                                                 src={cartItem.product.image?.formats.thumbnail.url + ''}
                                             />
                                             <div className={classes.cartItemDetails}>
-                                                <Link href={`/product/${cartItem.product.id}`}>
+                                                <Link href={`/product/${cartItem.product.identifier}`}>
                                                     <a className={classes.link} onClick={handleCartClose}>
                                                         <div className={classes.cartItemTitle}>
                                                             {cartItem.product.name}
@@ -168,7 +168,7 @@ const CartMenu: React.FC<CartMenuProps> = ({ cartURL }) => {
                                                     </a>
                                                 </Link>
                                                 <div className={classes.cartItemPrice}>
-                                                    {formatCurrency(cartItem.product.price)}
+                                                    {formatCurrency(cartItem.product.price, shopCurrency)}
                                                 </div>
                                                 <div className={classes.cartItemQuantity}>
                                                     {`Quantity: ${cartItem.quantity}`}

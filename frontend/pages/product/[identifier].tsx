@@ -10,6 +10,7 @@ import { NotificationContext } from '../../src/contexts/NotificationContext';
 import Image from '../../src/components/styledComponents/StyledImage';
 import Button from '../../src/components/styledComponents/StyledButton';
 import { ShopContext } from '../../src/contexts/ShopContext';
+import { formatCurrency } from '../../src/tools/Utils';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -144,7 +145,7 @@ const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
     const classes = useStyles();
     const parsedContent = useMemo(() => parse(details || ''), [details]);
     const { openNotification } = useContext(NotificationContext);
-    const { addToCart } = useContext(ShopContext);
+    const { addToCart, shopCurrency } = useContext(ShopContext);
     const router = useRouter();
 
     const handleAddToCart = useCallback(() => {
@@ -154,7 +155,7 @@ const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
         };
     }, [addToCart, product]);
 
-    const formattedPrice = useMemo(() => ((price || price === 0) && new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(price)), [price]);
+    const formattedPrice = useMemo(() => ((price || price === 0) && formatCurrency(price, shopCurrency)), [price, shopCurrency]);
 
     useEffect(() => {
         if (id === 0 && name === '__empty') {
@@ -196,7 +197,7 @@ const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
 }
 
 ProductPage.getInitialProps = async ({ query }): Promise<{ product: Product }> => {
-    const productResponse = await getProduct(Number(query.identifier));
+    const productResponse = await getProduct(query.identifier + '');
     const product: Product = (!productResponse.isError && productResponse.data) || { id: 0, name: '__empty' } as Product;
 
     return { product };
