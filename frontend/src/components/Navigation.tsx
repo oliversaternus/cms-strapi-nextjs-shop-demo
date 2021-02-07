@@ -314,7 +314,7 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
                                                                 key={item.id}
                                                                 onClick={() => setSelectedLinkId(undefined)}
                                                             >
-                                                                {item.imageUrl && <Avatar src={item.imageUrl} className={classes.linkAvatar}></Avatar>}
+                                                                {item.imageUrl && <Avatar src={item.imageUrl} className={classes.linkAvatar}>{item.link?.[0]}</Avatar>}
                                                                 <Link href={item.path + ''} >
                                                                     <a target="_self" className={clsx(classes.link, classes.menuLink)}>{item.link}</a>
                                                                 </Link>

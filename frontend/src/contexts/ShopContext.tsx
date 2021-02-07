@@ -2,6 +2,22 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { randomHex } from '../tools/Utils';
 import { Product, CartItem, ShopConfig, Currency } from '../tools/Models';
 
+const validateCartItems = (cartItems: CartItem[]) => {
+    if (!Array.isArray(cartItems)) {
+        return false;
+    }
+    try {
+        for (const item of cartItems) {
+            if (!item.id || !item.product || isNaN(item.quantity)) {
+                return false;
+            }
+        }
+        return true;
+    } catch (e) {
+        return false;
+    }
+};
+
 export const ShopContext = React.createContext<{
     items: CartItem[];
     totalPrice: number;
@@ -63,7 +79,7 @@ export const ShopContextProvider: React.FC<{ config: ShopConfig }> = ({ children
             } catch (e) {
                 _items = undefined;
             }
-            if (Array.isArray(_items)) {
+            if (validateCartItems(_items)) {
                 return _items;
             }
         }
