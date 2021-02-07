@@ -10,6 +10,7 @@ import { createOrder } from '../../tools/Service';
 import StyledInput from '../styledComponents/StyledInput';
 import ReCAPTCHA from "react-google-recaptcha";
 import { IntegrationsContext } from '../../contexts/IntegrationsContext';
+import { validate } from 'email-validator';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -128,6 +129,10 @@ const CheckoutDialog: React.FC<{ message?: string; open: boolean; onClose: () =>
         }
         if (captcha?.enabled && !captchaCode) {
             openNotification('error', 'Please solve the captcha');
+            return;
+        }
+        if (!validate(customer.email)) {
+            openNotification('error', 'Email is invalid');
             return;
         }
         const order: Order = {

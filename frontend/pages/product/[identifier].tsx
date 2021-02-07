@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect, useContext, useCallback } from 'react';
 import { NextPage } from 'next';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme, fade, lighten } from '@material-ui/core/styles';
 import { getProduct } from '../../src/tools/Service';
 import { Product } from '../../src/tools/Models';
 import { parse } from 'marked';
@@ -122,6 +122,28 @@ const useStyles = makeStyles((theme: Theme) =>
                 fontSize: 16,
                 color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary,
                 paddingLeft: 18
+            },
+            '& table': {
+                borderCollapse: 'collapse'
+            },
+            '& td': {
+                border: `1px solid ${lighten(theme.palette.sectionStyles.text?.text || theme.palette.text.primary, 0.6)}`,
+                padding: 8
+            },
+            '& th': {
+                textAlign: 'left',
+                fontWeight: 600,
+                border: `1px solid ${theme.palette.sectionStyles.text?.text || theme.palette.text.primary}`,
+                padding: 8,
+                paddingTop: 12,
+                paddingBottom: 12,
+                backgroundColor: theme.palette.sectionStyles.text?.text || theme.palette.text.primary,
+                color: theme.palette.sectionStyles.text?.background || theme.palette.backgrounds.main
+            },
+            '& tr': {
+                '&:nth-child(even)': {
+                    backgroundColor: fade(theme.palette.sectionStyles.text?.text || theme.palette.text.primary, 0.2)
+                }
             }
         },
         '@media (max-width: 800px)': {
