@@ -212,6 +212,14 @@ export type TextSection = {
     align?: 'left' | 'right'
 };
 
+export type DocumentsSection = {
+    __component: string;
+    id: number;
+    identifier?: string;
+    files: File[];
+    headline?: string;
+};
+
 export type TextWithImageSection = {
     __component: string;
     id: number;

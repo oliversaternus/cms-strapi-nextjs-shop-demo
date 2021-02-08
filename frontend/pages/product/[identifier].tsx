@@ -2,7 +2,7 @@ import React, { useMemo, useEffect, useContext, useCallback } from 'react';
 import { NextPage } from 'next';
 import { createStyles, makeStyles, Theme, fade } from '@material-ui/core/styles';
 import { getProduct } from '../../src/tools/Service';
-import { GallerySection, HeroSection, Product } from '../../src/tools/Models';
+import { DocumentsSection, GallerySection, HeroSection, Product } from '../../src/tools/Models';
 import { parse } from 'marked';
 import { CircularProgress } from '@material-ui/core';
 import { useRouter } from 'next/router';
@@ -12,6 +12,7 @@ import { ShopContext } from '../../src/contexts/ShopContext';
 import { formatCurrency } from '../../src/tools/Utils';
 import Gallery from '../../src/components/sections/Gallery';
 import Hero from '../../src/components/sections/Hero';
+import Documents from '../../src/components/sections/Documents';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -196,6 +197,13 @@ const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
         images
     }), [images]);
 
+    const documentsSection = useMemo((): DocumentsSection => ({
+        __component: 'section.documents',
+        id: 3,
+        headline: 'Documents',
+        files: documents || []
+    }), [documents]);
+
     useEffect(() => {
         if (id === 0 && name === '__empty') {
             openNotification('error', 'Product not found.');
@@ -222,6 +230,7 @@ const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
             </Hero>
             <div className={classes.details} dangerouslySetInnerHTML={{ __html: parsedContent }} />
             {images?.length ? <Gallery gallery={gallerySection} /> : null}
+            {documents?.length ? <Documents documents={documentsSection} /> : null}
         </div>
     );
 }
