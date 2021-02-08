@@ -6,6 +6,7 @@ import Fade from '@material-ui/core/Fade';
 interface ImageProps {
     src: string;
     style?: React.CSSProperties;
+    containerStyle?: React.CSSProperties;
     className?: string;
     backgroundColor?: string;
     previewUrl?: string;
@@ -49,11 +50,11 @@ const useStyles = makeStyles(() => createStyles({
 }));
 
 const Image: React.FC<ImageProps> = (props) => {
-    const { src, className, style, backgroundColor, previewUrl } = props;
+    const { src, className, style, backgroundColor, previewUrl, containerStyle } = props;
     const classes = useStyles({ backgroundColor });
 
     return (
-        <div className={className}>
+        <div className={className} style={containerStyle}>
             <div className={classes.container}>
                 <div className={classes.background} style={{ backgroundImage: previewUrl ? `url(${previewUrl})` : undefined, ...style }}></div>
                 <Img

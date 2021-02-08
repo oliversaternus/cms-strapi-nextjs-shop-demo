@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { createStyles, makeStyles, withStyles } from '@material-ui/core/styles';
 import { IconButton, useMediaQuery, Theme, MenuItem, Avatar } from '@material-ui/core';
 import { Menu as MenuIcon, ArrowDropDown } from '@material-ui/icons';
@@ -18,6 +18,7 @@ import ExpandIcon from '@material-ui/icons/ArrowDropDown';
 import Typography from '@material-ui/core/Typography';
 import CartMenu from './shop/CartMenu';
 import CartLink from './shop/CartLink';
+import useScrollPosition from '../hooks/useScrollPosition';
 
 const Accordion = withStyles({
     root: {
@@ -243,21 +244,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) => {
     const classes = useStyles();
-    const [scrollTop, setScrollTop] = useState(0);
     const [menuOpen, setMenuOpen] = useState(false);
     const isMobile = useMediaQuery('(max-width:800px)');
     const [selectedLinkId, setSelectedLinkId] = useState<number>();
     const [selectedAccordionLinkId, setSelectedAccordionLinkId] = useState<number>();
     const linkMenuRefs = useRef<Array<HTMLButtonElement | null>>([]);
-
-    useEffect(() => {
-        setScrollTop(window.scrollY);
-        const onScroll = () => {
-            setScrollTop(window.scrollY);
-        };
-        document.addEventListener('scroll', onScroll);
-        return () => document.removeEventListener('scroll', onScroll);
-    }, []);
+    const scrollTop = useScrollPosition();
 
     const isScrolled = scrollTop > 16;
 

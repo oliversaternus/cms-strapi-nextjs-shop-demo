@@ -7,6 +7,7 @@ import { parse } from 'marked';
 import { useMemo } from "react";
 import Button from '../styledComponents/StyledButton';
 import Image from '../styledComponents/StyledImage';
+import useScrollPosition from "../../hooks/useScrollPosition";
 
 interface HeroProps {
     hero: HeroSection;
@@ -146,6 +147,8 @@ const Hero: React.FC<HeroProps> = (props) => {
     const { className, style, hero, children } = props;
     const classes = useStyles();
     const parsedContent = useMemo(() => parse(hero.content || ''), [hero]);
+    const scrollTop = useScrollPosition();
+
     return (
         <div
             style={style}
@@ -175,6 +178,7 @@ const Hero: React.FC<HeroProps> = (props) => {
             {hero.image &&
                 <>
                     <Image
+                        containerStyle={{ top: scrollTop > 0 ? scrollTop * 0.32 : 0 }}
                         className={classes.imageContainer}
                         src={hero.image.url}
                         previewUrl={hero.image.previewUrl}

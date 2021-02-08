@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         title: {
             color: theme.palette.componentStyles.footer?.textStrong || theme.palette.text.secondary,
-            fontSize: 18,
+            fontSize: 20,
             fontWeight: 600,
             marginBottom: 8,
             display: 'flex',
@@ -108,8 +108,8 @@ const useStyles = makeStyles((theme: Theme) =>
             },
         },
         link: {
-            fontSize: 14,
-            fontWeight: 300,
+            fontSize: 16,
+            fontWeight: 400,
             marginTop: 6,
             marginBottom: 6,
             color: theme.palette.componentStyles.footer?.text || theme.palette.text.primary,
