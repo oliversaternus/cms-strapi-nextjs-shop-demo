@@ -7,8 +7,6 @@
     "@material-ui/core": "latest",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.57",
-    "@types/country-list": "^2.1.0",
-    "@types/react-google-recaptcha": "^2.1.0",
     "clsx": "latest",
     "country-list": "^2.2.0",
     "email-validator": "^2.0.4",
@@ -36,8 +34,12 @@
     "@types/next": "latest",
     "@types/node": "latest",
     "@types/qs": "^6.9.3",
+    "@types/country-list": "^2.1.0",
+    "@types/fslightbox-react": "^1.4.0",
+    "@types/react-google-recaptcha": "^2.1.0",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "fslightbox-react": "^1.6.2",
     "typescript": "latest"
   }
 }

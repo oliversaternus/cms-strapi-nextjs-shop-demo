@@ -1,13 +1,12 @@
-import * as React from "react";
+import React, { useRef, useMemo } from "react";
 import clsx from "clsx";
 import { createStyles, makeStyles, fade } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core";
 import { HeroSection } from '../../tools/Models';
 import { parse } from 'marked';
-import { useMemo } from "react";
 import Button from '../styledComponents/StyledButton';
 import Image from '../styledComponents/StyledImage';
-import useScrollPosition from "../../hooks/useScrollPosition";
+import useParallaxOffset from "../../hooks/useParallaxOffset";
 
 interface HeroProps {
     hero: HeroSection;
@@ -119,7 +118,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
     imageContainer: {
         width: '100%',
-        height: '100%',
+        height: 'calc(100% + 84px)',
         position: 'absolute',
         zIndex: 0,
         top: 0,
@@ -147,13 +146,15 @@ const Hero: React.FC<HeroProps> = (props) => {
     const { className, style, hero, children } = props;
     const classes = useStyles();
     const parsedContent = useMemo(() => parse(hero.content || ''), [hero]);
-    const scrollTop = useScrollPosition();
+    const rootRef = useRef<HTMLDivElement>(null);
+    const parallaxOffset = useParallaxOffset(rootRef, 84, 320);
 
     return (
         <div
             style={style}
             className={clsx(classes.root, className)}
             id={hero.identifier}
+            ref={rootRef}
         >
             <div className={classes.container}>
                 <div className={classes.content} dangerouslySetInnerHTML={{ __html: parsedContent }}>
@@ -178,7 +179,7 @@ const Hero: React.FC<HeroProps> = (props) => {
             {hero.image &&
                 <>
                     <Image
-                        containerStyle={{ top: scrollTop > 0 ? scrollTop * 0.32 : 0 }}
+                        containerStyle={{ top: parallaxOffset }}
                         className={classes.imageContainer}
                         src={hero.image.url}
                         previewUrl={hero.image.previewUrl}

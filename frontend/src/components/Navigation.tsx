@@ -302,10 +302,9 @@ const Navigation: React.FC<NavigationProps> = ({ transparent, links, logoSrc }) 
                                                 <ClickAwayListener onClickAway={() => setSelectedLinkId(undefined)}>
                                                     <MenuList>
                                                         {links?.[index]?.links?.map(item =>
-                                                            <Link href={item.path + ''} >
+                                                            <Link href={item.path + ''} key={item.id}>
                                                                 <a target="_self" className={clsx(classes.link, classes.menuLink)}>
                                                                     <MenuItem
-                                                                        key={item.id}
                                                                         onClick={() => setSelectedLinkId(undefined)}
                                                                     >
                                                                         {item.imageUrl && <Avatar src={item.imageUrl} className={classes.linkAvatar}>{item.link?.[0]}</Avatar>}

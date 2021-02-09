@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core";
 import { GallerySection } from '../../tools/Models';
 import Image from '../styledComponents/StyledImage';
+import Lightbox from 'fslightbox-react';
 
 interface GalleryProps {
     gallery: GallerySection;
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     clickable: {
         cursor: 'pointer',
         '&:hover': {
-            transform: 'scale(1.04)'
+            transform: 'scale(1.08)'
         }
     },
     breaker: {
@@ -108,6 +109,17 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 const Gallery: React.FC<GalleryProps> = (props) => {
     const { className, style, gallery } = props;
     const classes = useStyles();
+    const [lightboxController, setLightboxController] = useState({
+        toggler: false,
+        sourceIndex: 0
+    });
+
+    const openLightboxOnSlide = (index: number) => () => {
+        setLightboxController({
+            toggler: !lightboxController.toggler,
+            sourceIndex: index
+        });
+    }
 
     return (
         <div
@@ -122,9 +134,9 @@ const Gallery: React.FC<GalleryProps> = (props) => {
             <div className={classes.container}>
                 {gallery.images?.map((image, index) =>
                     <div key={image.id} className={clsx(classes.item, index % 6 === 1 ? classes.square : classes.rect)}>
-                        <div className={classes.imageContainer}>
+                        <div className={classes.imageContainer} onClick={openLightboxOnSlide(index)}>
                             <Image
-                                className={classes.image}
+                                className={clsx(classes.image, classes.clickable)}
                                 src={image.url}
                                 previewUrl={image.previewUrl}
                             />
@@ -132,6 +144,11 @@ const Gallery: React.FC<GalleryProps> = (props) => {
                     </div>
                 )}
             </div >
+            <Lightbox
+                toggler={lightboxController.toggler}
+                sourceIndex={lightboxController.sourceIndex}
+                sources={gallery.images?.map(image => (image.url))}
+            />
         </div >
     );
 };
