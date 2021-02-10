@@ -5,7 +5,7 @@ import { Theme } from "@material-ui/core";
 import { GallerySection } from '../../tools/Models';
 import Image from '../styledComponents/StyledImage';
 // workaround for react bug: load vanilla JS module
-import '../../../fslightbox-ssr';
+import '../../../fslightbox_mod';
 
 interface GalleryProps {
     gallery: GallerySection;
@@ -17,6 +17,7 @@ interface GalleryProps {
 declare class FsLightbox {
     props: {
         sources: string[];
+        [key: string]: any;
     };
     open: (index?: number) => void;
     [key: string]: any;
@@ -123,15 +124,15 @@ const Gallery: React.FC<GalleryProps> = (props) => {
 
     useEffect(() => {
         const lightbox = new FsLightbox();
-        lightBoxRef.current = lightbox;
         lightbox.props.sources = gallery.images?.map(image => (image.url)) || [];
+        lightBoxRef.current = lightbox;
     }, [gallery]);
 
     const handleClick = (index: number) => () => {
         if (!lightBoxRef.current) {
             return;
         }
-        lightBoxRef.current?.open?.(index);
+        lightBoxRef.current.open?.(index);
     };
 
     return (
