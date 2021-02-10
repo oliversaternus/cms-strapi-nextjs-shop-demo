@@ -1,11 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import clsx from "clsx";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core";
 import { GallerySection } from '../../tools/Models';
 import Image from '../styledComponents/StyledImage';
-// workaround for react bug: load vanilla JS module
-import '../../../fslightbox_mod';
 
 interface GalleryProps {
     gallery: GallerySection;
@@ -122,14 +120,26 @@ const Gallery: React.FC<GalleryProps> = (props) => {
     const classes = useStyles();
     const lightBoxRef = useRef<FsLightbox | null>(null);
 
-    useEffect(() => {
-        const lightbox = new FsLightbox();
-        lightbox.props.sources = gallery.images?.map(image => (image.url)) || [];
-        lightBoxRef.current = lightbox;
+    const initializeLightbox = useCallback(async (index: number) => {
+        try {
+            // prevent eventual execution on server
+            if (typeof window === 'undefined') {
+                return;
+            }
+            // dynamically load vanilla JS module
+            await import('../../../fslightbox');
+            const lightbox = new FsLightbox();
+            lightbox.props.sources = gallery.images?.map(image => (image.url)) || [];
+            lightbox.open(index);
+            lightBoxRef.current = lightbox;
+        } catch (e) {
+            console.log(e);
+        }
     }, [gallery]);
 
     const handleClick = (index: number) => () => {
         if (!lightBoxRef.current) {
+            initializeLightbox(index);
             return;
         }
         lightBoxRef.current.open?.(index);
