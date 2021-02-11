@@ -1,15 +1,14 @@
 import * as React from "react";
 import { CardsSection, HeroSection, BannerSection, TextSection, QuoteSection, TextWithImageSection, PageContent, ContactSection, GallerySection, LocationSection } from '../tools/Models';
-import dynamic from 'next/dynamic';
-const Hero = dynamic(() => import('./sections/Hero'));
-const Cards = dynamic(() => import('./sections/Cards'));
-const Banner = dynamic(() => import('./sections/Banner'));
-const Text = dynamic(() => import('./sections/Text'));
-const TextWithImage = dynamic(() => import('./sections/TextWithImage'));
-const Quote = dynamic(() => import('./sections/Quote'));
-const Contact = dynamic(() => import('./sections/Contact'));
-const Gallery = dynamic(() => import('./sections/Gallery'));
-const Location = dynamic(() => import('./sections/Location'));
+import Hero from './sections/Hero';
+import Cards from './sections/Cards';
+import Banner from './sections/Banner';
+import Text from './sections/Text';
+import TextWithImage from './sections/TextWithImage';
+import Quote from './sections/Quote';
+import Contact from './sections/Contact';
+import Gallery from './sections/Gallery';
+import Location from './sections/Location';
 
 interface GenericContentProps {
     content?: PageContent[];

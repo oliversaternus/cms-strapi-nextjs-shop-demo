@@ -1,19 +1,35 @@
-import React from "react";
-import "flatpickr/dist/themes/airbnb.css";
-import Flatpickr from "react-flatpickr";
+import React, { useEffect, useRef, useState } from "react";
 import StyledInput from './StyledInput';
-import dateformat from 'dateformat';
+import dynamic from 'next/dynamic';
+const Flatpickr = dynamic(() => import('react-flatpickr'));
+
+type DateformatFunction = (date?: string | number | Date | undefined, mask?: string | undefined, utc?: boolean | undefined, gmt?: boolean | undefined) => string;
 
 interface StyledDatePickerProps {
     inputClass?: string;
     value: Date;
-    onChange: (date: Date) => void;
+    onChange?: (date: Date) => void;
     className?: string;
     style?: React.CSSProperties;
 }
 
 const StyledDatePicker: React.FC<StyledDatePickerProps> = (props) => {
     const { className, style, inputClass, value, onChange } = props;
+    const dateformatRef = useRef<DateformatFunction | null>(null);
+    const [initialized, setInitialized] = useState(false);
+
+    useEffect(() => {
+        const initialize = async () => {
+            // dynamically import flatpickr CSS
+            import('flatpickr/dist/themes/airbnb.css');
+            // dynamically import dateformat library
+            await import('dateformat').then(df => {
+                dateformatRef.current = df.default;
+            })
+            setInitialized(true);
+        };
+        initialize();
+    }, []);
 
     const handleDateChange = (dates: Date[]) => {
         onChange?.(dates[0]);
@@ -26,14 +42,15 @@ const StyledDatePicker: React.FC<StyledDatePickerProps> = (props) => {
             onChange={handleDateChange}
             options={{
                 enableTime: false,
-                dateFormat: 'm/d/Y'
+                dateFormat: 'm/d/Y',
+                monthSelectorType: 'static'
             }}
             render={
                 ({ defaultValue, value, ...props }, ref) => {
                     return <StyledInput
                         inputClass={inputClass}
                         style={style}
-                        value={dateformat(value as Date, 'mm/dd/yyyy')}
+                        value={initialized ? dateformatRef.current?.(value as Date, 'mm/dd/yyyy') : ''}
                         defaultValue={defaultValue}
                         inputRef={ref}
                     />
