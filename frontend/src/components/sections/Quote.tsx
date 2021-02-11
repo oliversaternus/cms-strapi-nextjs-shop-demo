@@ -1,10 +1,9 @@
-import * as React from "react";
+import React, { useMemo } from "react";
 import clsx from "clsx";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { Avatar, Theme } from "@material-ui/core";
 import { QuoteSection } from '../../tools/Models';
 import { parse } from 'marked';
-import { useMemo } from "react";
 
 interface QuoteProps {
     quote: QuoteSection;
@@ -46,70 +45,16 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         paddingTop: 18,
         textAlign: 'center',
         opacity: 0.8,
-        '& h1': {
-            paddingTop: 6,
-            paddingBottom: 6,
+        fontSize: 20,
+        fontWeight: 300,
+        color: theme.palette.sectionStyles.quote?.text || theme.palette.text.primary,
+        '& *': {
+            padding: 0,
             margin: 0,
-            fontSize: 20,
-            fontWeight: 400,
-            lineHeight: 1.2,
-            color: theme.palette.sectionStyles.quote?.textLight || theme.palette.text.hint,
-        },
-        '& h2': {
-            paddingTop: 6,
-            paddingBottom: 6,
-            margin: 0,
-            fontSize: 20,
-            fontWeight: 400,
-            lineHeight: 1.2,
-            color: theme.palette.sectionStyles.quote?.textLight || theme.palette.text.hint
-        },
-        '& h3': {
-            paddingTop: 6,
-            paddingBottom: 6,
-            margin: 0,
-            fontSize: 20,
-            fontWeight: 400,
-            lineHeight: 1.2,
-            color: theme.palette.sectionStyles.quote?.textLight || theme.palette.text.hint
-        },
-        '& h4': {
-            paddingTop: 6,
-            paddingBottom: 6,
-            margin: 0,
-            fontSize: 20,
-            fontWeight: 400,
-            lineHeight: 1.2,
-            color: theme.palette.sectionStyles.quote?.textLight || theme.palette.text.hint
-        },
-        '& h5': {
-            paddingTop: 6,
-            paddingBottom: 6,
-            margin: 0,
-            fontSize: 20,
-            fontWeight: 400,
-            lineHeight: 1.2,
-            color: theme.palette.sectionStyles.quote?.textLight || theme.palette.text.hint
-        },
-        '& p': {
-            margin: 0,
-            fontSize: 20,
-            fontWeight: 300,
-            color: theme.palette.sectionStyles.quote?.text || theme.palette.text.primary
-        },
-        '& ul': {
-            margin: 0,
+            opacity: 0.8,
             fontSize: 20,
             fontWeight: 300,
             color: theme.palette.sectionStyles.quote?.text || theme.palette.text.primary,
-            paddingLeft: 18
-        },
-        '& ol': {
-            margin: 0,
-            fontSize: 20,
-            fontWeight: 300,
-            color: theme.palette.sectionStyles.quote?.text || theme.palette.text.primary,
-            paddingLeft: 18
         }
     },
     quoteIcon: {
@@ -140,15 +85,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         width: 64,
         height: 64
     },
-    '@media (max-width: 1000px)': {
-        textContent: {
-            width: '100%'
-        },
-        headline: {
-            width: '100%',
-            paddingBottom: 24
-        }
-    },
     '@media (max-width: 800px)': {
         root: {
             padding: 32,
@@ -161,7 +97,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 const Quote: React.FC<QuoteProps> = (props) => {
     const { className, style, quote } = props;
     const classes = useStyles();
-    const parsedContent = useMemo(() => parse(quote.content || ''), [quote]);
+    const parsedContent = useMemo(() => parse(quote.content || ''), [quote, quote.content]);
     return (
         <div
             style={style}

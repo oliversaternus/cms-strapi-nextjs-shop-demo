@@ -7,18 +7,8 @@
   },
   "options": {},
   "attributes": {
-    "headline": {
-      "type": "text"
-    },
     "content": {
       "type": "richtext"
-    },
-    "align": {
-      "type": "enumeration",
-      "enum": [
-        "left",
-        "right"
-      ]
     },
     "identifier": {
       "type": "string"

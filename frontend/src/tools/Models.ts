@@ -187,6 +187,7 @@ export type CardsSection = {
 
 export type CardsSectionItem = {
     content?: string;
+    headline?: string;
     id: number;
     image?: Image;
     link?: string;
@@ -208,8 +209,6 @@ export type TextSection = {
     id: number;
     identifier?: string;
     content?: string;
-    headline?: string;
-    align?: 'left' | 'right'
 };
 
 export type DocumentsSection = {

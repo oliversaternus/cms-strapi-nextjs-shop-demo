@@ -8,7 +8,7 @@
   "options": {},
   "attributes": {
     "headline": {
-      "type": "text"
+      "type": "string"
     },
     "name": {
       "type": "string"

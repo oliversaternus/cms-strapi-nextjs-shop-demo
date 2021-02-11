@@ -1,10 +1,9 @@
-import * as React from "react";
+import React, { useMemo } from "react";
 import clsx from "clsx";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { Theme, Avatar } from "@material-ui/core";
 import { CardsSection, CardsSectionItem } from '../../tools/Models';
 import { parse } from 'marked';
-import { useMemo } from "react";
 import Button from '../styledComponents/StyledButton';
 
 interface CardsProps {
@@ -84,84 +83,27 @@ const useCardStyles = makeStyles((theme: Theme) => createStyles({
     cardContent: {
         width: '100%',
         height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        '& h1': {
-            paddingTop: 6,
-            paddingBottom: 12,
+        fontSize: 16,
+        textAlign: 'center',
+        fontWeight: 300,
+        color: theme.palette.sectionStyles.cards?.text || theme.palette.text.primary,
+        '& *': {
             margin: 0,
-            textAlign: 'center',
-            fontSize: 24,
-            fontWeight: 400,
-            lineHeight: 1.2,
-            color: theme.palette.sectionStyles.cards?.text || theme.palette.text.primary
-        },
-        '& h2': {
-            paddingTop: 6,
-            paddingBottom: 12,
-            margin: 0,
-            textAlign: 'center',
-            fontSize: 24,
-            fontWeight: 400,
-            lineHeight: 1.2,
-            color: theme.palette.sectionStyles.cards?.text || theme.palette.text.primary
-        },
-        '& h3': {
-            paddingTop: 6,
-            paddingBottom: 12,
-            margin: 0,
-            textAlign: 'center',
-            fontSize: 24,
-            fontWeight: 400,
-            lineHeight: 1.2,
-            color: theme.palette.sectionStyles.cards?.text || theme.palette.text.primary
-        },
-        '& h4': {
-            paddingTop: 6,
-            paddingBottom: 12,
-            margin: 0,
-            textAlign: 'center',
-            fontSize: 24,
-            fontWeight: 400,
-            lineHeight: 1.2,
-            color: theme.palette.sectionStyles.cards?.text || theme.palette.text.primary
-        },
-        '& h5': {
-            paddingTop: 6,
-            paddingBottom: 12,
-            margin: 0,
-            textAlign: 'center',
-            fontSize: 24,
-            fontWeight: 400,
-            lineHeight: 1.2,
-            color: theme.palette.sectionStyles.cards?.text || theme.palette.text.primary
-        },
-        '& p': {
-            margin: 0,
+            padding: 0,
             fontSize: 16,
             textAlign: 'center',
             fontWeight: 300,
             color: theme.palette.sectionStyles.cards?.text || theme.palette.text.primary
-        },
-        '& ul': {
-            margin: 0,
-            paddingBottom: 32,
-            fontSize: 16,
-            textAlign: 'center',
-            fontWeight: 300,
-            color: theme.palette.sectionStyles.cards?.text || theme.palette.text.primary,
-            paddingLeft: 18
-        },
-        '& ol': {
-            margin: 0,
-            paddingBottom: 32,
-            textAlign: 'center',
-            fontSize: 16,
-            fontWeight: 300,
-            color: theme.palette.sectionStyles.cards?.text || theme.palette.text.primary,
-            paddingLeft: 18
         }
+    },
+    headline: {
+        paddingTop: 6,
+        paddingBottom: 12,
+        textAlign: 'center',
+        fontSize: 24,
+        fontWeight: 400,
+        lineHeight: 1.2,
+        color: theme.palette.sectionStyles.cards?.text || theme.palette.text.primary
     },
     buttonContainer: {
         marginTop: 24,
@@ -196,12 +138,15 @@ const useCardStyles = makeStyles((theme: Theme) => createStyles({
 const CardItem: React.FC<CardsItemProps> = (props) => {
     const { item, identifier } = props;
     const classes = useCardStyles();
-    const parsedContent = useMemo(() => parse(item.content || ''), [item]);
+    const parsedContent = useMemo(() => parse(item.content || ''), [item, item.content]);
     return (
         <div className={classes.root}>
             <div className={classes.container}>
                 {item.image && (item.variant === 'person' ? <div className={classes.avatarContainer}><Avatar className={classes.avatar} src={item.image.url} /></div> : <img className={classes.image} src={item.image.url} />)}
-                <div className={classes.cardContent} dangerouslySetInnerHTML={{ __html: parsedContent }}></div>
+                {item.headline && <div className={classes.headline}>
+                    {item.headline}
+                </div>}
+                {item.content && <div className={classes.cardContent} dangerouslySetInnerHTML={{ __html: parsedContent }} />}
                 {item.link && item.linkText && <div className={classes.buttonContainer}>
                     <Button
                         link={item.link}

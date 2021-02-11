@@ -1,9 +1,8 @@
 import React, { useMemo, useEffect, useContext, useCallback } from 'react';
 import { NextPage } from 'next';
-import { createStyles, makeStyles, Theme, fade } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { getProduct } from '../../src/tools/Service';
-import { DocumentsSection, GallerySection, HeroSection, Product } from '../../src/tools/Models';
-import { parse } from 'marked';
+import { DocumentsSection, GallerySection, HeroSection, TextSection, Product } from '../../src/tools/Models';
 import { CircularProgress } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { NotificationContext } from '../../src/contexts/NotificationContext';
@@ -13,6 +12,7 @@ import { formatCurrency } from '../../src/tools/Utils';
 import Gallery from '../../src/components/sections/Gallery';
 import Hero from '../../src/components/sections/Hero';
 import Documents from '../../src/components/sections/Documents';
+import Text from '../../src/components/sections/Text';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -26,148 +26,12 @@ const useStyles = makeStyles((theme: Theme) =>
         buttonContainer: {
             marginTop: 8
         },
-        details: {
-            width: '100%',
-            padding: 32,
-            maxWidth: 1080,
-            '& h1': {
-                paddingTop: 6,
-                paddingBottom: 12,
-                margin: 0,
-                fontSize: 44,
-                fontWeight: 700,
-                lineHeight: 1.2,
-                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary
-            },
-            '& h2': {
-                paddingTop: 6,
-                paddingBottom: 12,
-                margin: 0,
-                fontSize: 36,
-                fontWeight: 500,
-                lineHeight: 1.2,
-                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary
-            },
-            '& h3': {
-                paddingTop: 6,
-                paddingBottom: 12,
-                margin: 0,
-                fontSize: 30,
-                fontWeight: 500,
-                lineHeight: 1.2,
-                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary
-            },
-            '& h4': {
-                paddingTop: 6,
-                paddingBottom: 12,
-                margin: 0,
-                fontSize: 28,
-                fontWeight: 400,
-                lineHeight: 1.2,
-                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary
-            },
-            '& h5': {
-                paddingTop: 6,
-                paddingBottom: 12,
-                margin: 0,
-                fontSize: 28,
-                fontWeight: 400,
-                lineHeight: 1.2,
-                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary
-            },
-            '& h6': {
-                paddingTop: 6,
-                paddingBottom: 12,
-                margin: 0,
-                fontSize: 28,
-                fontWeight: 400,
-                lineHeight: 1.2,
-                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary
-            },
-            '& p': {
-                margin: 0,
-                marginTop: 18,
-                fontSize: 17,
-                fontWeight: 300,
-                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary
-            },
-            '& ul': {
-                margin: 0,
-                paddingTop: 24,
-                paddingBottom: 24,
-                fontSize: 18,
-                fontWeight: 400,
-                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary,
-                paddingLeft: 18
-            },
-            '& ol': {
-                margin: 0,
-                paddingTop: 24,
-                paddingBottom: 24,
-                fontSize: 18,
-                fontWeight: 400,
-                color: theme.palette.sectionStyles.text?.text || theme.palette.text.primary,
-                paddingLeft: 18
-            },
-            '& img': {
-                maxWidth: '100%',
-                margin: 'auto',
-                display: 'block'
-            },
-            '& table': {
-                borderCollapse: 'collapse',
-                fontSize: 17,
-                fontWeight: 400,
-                width: '100%'
-            },
-            '& td': {
-                padding: 8
-            },
-            '& th': {
-                textAlign: 'left',
-                fontWeight: 600,
-                padding: 8,
-                paddingTop: 12,
-                paddingBottom: 12,
-                backgroundColor: theme.palette.sectionStyles.text?.text || theme.palette.text.primary,
-                color: theme.palette.sectionStyles.text?.background || theme.palette.backgrounds.main
-            },
-            '& tr': {
-                '&:nth-child(even)': {
-                    backgroundColor: fade(theme.palette.sectionStyles.text?.text || theme.palette.text.primary, 0.2)
-                }
-            }
-        },
-        '@media (max-width: 800px)': {
-            details: {
-                padding: 24,
-                '& h1': {
-                    fontSize: 32,
-                },
-                '& h2': {
-                    fontSize: 28
-                },
-                '& h3': {
-                    fontSize: 24
-                },
-                '& h4': {
-                    fontSize: 20
-                },
-                '& h5': {
-                    fontSize: 18
-                },
-                '& h6': {
-                    fontSize: 18
-                }
-            }
-        }
     }),
 );
 
 const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
     const { id, name, description, image, price, images, availible, documents, details } = product;
     const classes = useStyles();
-    const parsedContent = useMemo(() => parse(details || ''), [details]);
     const { openNotification } = useContext(NotificationContext);
     const { addToCart, shopCurrency } = useContext(ShopContext);
     const router = useRouter();
@@ -204,6 +68,12 @@ const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
         files: documents || []
     }), [documents]);
 
+    const textSection = useMemo((): TextSection => ({
+        __component: 'section.text',
+        id: 4,
+        content: details
+    }), [documents]);
+
     useEffect(() => {
         if (id === 0 && name === '__empty') {
             openNotification('error', 'Product not found.');
@@ -228,7 +98,7 @@ const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
                     </Button>
                 </div>
             </Hero>
-            <div className={classes.details} dangerouslySetInnerHTML={{ __html: parsedContent }} />
+            <Text text={textSection} />
             {images?.length ? <Gallery gallery={gallerySection} /> : null}
             {documents?.length ? <Documents documents={documentsSection} /> : null}
         </div>

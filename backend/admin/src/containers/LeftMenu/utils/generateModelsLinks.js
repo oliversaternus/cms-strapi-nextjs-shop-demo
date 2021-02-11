@@ -1,8 +1,10 @@
 import { chain, get } from 'lodash';
 
 const generateLinks = links => {
+    console.log({ links });
     return links
         .filter(link => link.isDisplayed)
+        .filter(link => link.apiID !== 'user')
         .map(link => {
             return {
                 icon: 'circle',

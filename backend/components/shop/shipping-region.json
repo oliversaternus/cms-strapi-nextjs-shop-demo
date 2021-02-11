@@ -2,18 +2,20 @@
   "collectionName": "components_shop_shipping_regions",
   "info": {
     "name": "ShippingRegion",
-    "icon": "shipping-fast"
+    "icon": "shipping-fast",
+    "description": ""
   },
   "options": {},
   "attributes": {
     "name": {
       "type": "string"
     },
-    "countries": {
-      "type": "json"
-    },
     "price": {
       "type": "decimal"
+    },
+    "countries": {
+      "type": "text",
+      "regex": "^([A-Z]{2}\\n?)*$"
     }
   }
 }

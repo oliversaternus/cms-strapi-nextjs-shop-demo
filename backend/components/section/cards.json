@@ -16,7 +16,7 @@
       "type": "string"
     },
     "headline": {
-      "type": "text"
+      "type": "string"
     }
   }
 }

@@ -2,7 +2,8 @@
   "collectionName": "components_component_cards",
   "info": {
     "name": "card",
-    "icon": "address-card"
+    "icon": "address-card",
+    "description": ""
   },
   "options": {},
   "attributes": {
@@ -17,9 +18,6 @@
       "plugin": "upload",
       "required": false
     },
-    "content": {
-      "type": "richtext"
-    },
     "variant": {
       "type": "enumeration",
       "enum": [
@@ -31,6 +29,12 @@
       "type": "string"
     },
     "linkText": {
+      "type": "string"
+    },
+    "content": {
+      "type": "text"
+    },
+    "headline": {
       "type": "string"
     }
   }
