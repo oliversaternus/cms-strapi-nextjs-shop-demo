@@ -142,7 +142,11 @@ const CardItem: React.FC<CardsItemProps> = (props) => {
     return (
         <div className={classes.root}>
             <div className={classes.container}>
-                {item.image && (item.variant === 'person' ? <div className={classes.avatarContainer}><Avatar className={classes.avatar} src={item.image.url} /></div> : <img className={classes.image} src={item.image.url} />)}
+                {item.image && (item.variant === 'person' ?
+                    <div className={classes.avatarContainer}>
+                        <Avatar className={classes.avatar} src={item.image.url} alt={item.image.alternativeText} />
+                    </div> :
+                    <img className={classes.image} src={item.image.url} alt={item.image.alternativeText} />)}
                 {item.headline && <div className={classes.headline}>
                     {item.headline}
                 </div>}

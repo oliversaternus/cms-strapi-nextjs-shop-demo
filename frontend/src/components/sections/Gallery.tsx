@@ -152,6 +152,7 @@ const Gallery: React.FC<GalleryProps> = (props) => {
                             <Image
                                 className={clsx(classes.image, classes.clickable)}
                                 src={image.url}
+                                altText={image?.alternativeText}
                                 previewUrl={image.previewUrl}
                             />
                         </div>

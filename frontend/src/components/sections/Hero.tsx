@@ -182,6 +182,7 @@ const Hero: React.FC<HeroProps> = (props) => {
                         containerStyle={{ top: parallaxOffset }}
                         className={classes.imageContainer}
                         src={hero.image.url}
+                        altText={hero.image?.alternativeText}
                         previewUrl={hero.image.previewUrl}
                     />
                     <div className={classes.imageOverlay} />

@@ -51,7 +51,7 @@ export type ShopConfig = {
     shippingInfo?: string;
     shipping?: Array<{
         id: number;
-        countries: string[];
+        countries?: string;
         price: number;
     }>
 };

@@ -158,6 +158,7 @@ const CartMenu: React.FC<CartMenuProps> = ({ cartURL }) => {
                                             <Avatar
                                                 className={classes.cartItemImage}
                                                 src={cartItem.product.image?.formats.thumbnail.url + ''}
+                                                alt={cartItem.product.image?.alternativeText}
                                             >{cartItem.product.name?.[0]}</Avatar>
                                             <div className={classes.cartItemDetails}>
                                                 <Link href={`/product/${cartItem.product.identifier}`}>

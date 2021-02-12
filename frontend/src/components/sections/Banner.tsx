@@ -180,6 +180,7 @@ const Banner: React.FC<BannerProps> = (props) => {
                 <Image
                     className={classes.imageContainer}
                     src={banner.image.url}
+                    altText={banner.image?.alternativeText}
                     previewUrl={banner.image.previewUrl}
                 />
             }

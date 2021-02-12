@@ -10,6 +10,7 @@ interface ImageProps {
     className?: string;
     backgroundColor?: string;
     previewUrl?: string;
+    altText?: string;
 }
 
 const useStyles = makeStyles(() => createStyles({
@@ -50,7 +51,7 @@ const useStyles = makeStyles(() => createStyles({
 }));
 
 const Image: React.FC<ImageProps> = (props) => {
-    const { src, className, style, backgroundColor, previewUrl, containerStyle } = props;
+    const { src, className, style, backgroundColor, previewUrl, containerStyle, altText } = props;
     const classes = useStyles({ backgroundColor });
 
     return (
@@ -59,6 +60,7 @@ const Image: React.FC<ImageProps> = (props) => {
                 <div className={classes.background} style={{ backgroundImage: previewUrl ? `url(${previewUrl})` : undefined, ...style }}></div>
                 <Img
                     key={src}
+                    alt={altText}
                     style={style}
                     src={src}
                     className={classes.image}

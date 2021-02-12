@@ -53,9 +53,10 @@ export const ShopContextProvider: React.FC<{ config: ShopConfig }> = ({ children
     const availibleShippingCountries = useMemo(() => {
         let countries: string[] = [];
         for (const category of (config.shipping || [])) {
-            countries = [...countries, ...(category.countries || [])];
+            const categoryCountries = category.countries?.split('\n').filter(Boolean);
+            countries = [...countries, ...(categoryCountries || [])];
         }
-        return countries;
+        return countries.map(country => country.trim());
     }, [config]);
 
     const [items, setItems] = useState<CartItem[]>([]);
@@ -64,7 +65,7 @@ export const ShopContextProvider: React.FC<{ config: ShopConfig }> = ({ children
     const maxQuantity = useMemo(() => config.maxQuantity || 10, [config, config.maxQuantity]);
 
     const shippingPrice = useMemo(() => {
-        const foundIndex = config.shipping?.findIndex(shippingItem => shippingItem.countries.includes(shippingCountry));
+        const foundIndex = config.shipping?.findIndex(shippingItem => shippingItem.countries?.includes(shippingCountry));
         if (foundIndex !== undefined && foundIndex !== -1) {
             return config.shipping?.[foundIndex].price || 0;
         }

@@ -169,6 +169,7 @@ const TextWithImage: React.FC<TextWithImageProps> = (props) => {
                         <Image
                             className={classes.image}
                             src={text.image.url}
+                            altText={text.image?.alternativeText}
                             previewUrl={text.image.previewUrl}
                         />}
                 </div>

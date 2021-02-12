@@ -205,6 +205,7 @@ const CartPage: NextPage<{}> = () => {
                                     <Image
                                         className={classes.cartItemImage}
                                         src={item.product.image?.formats.thumbnail.url + ''}
+                                        altText={item.product.image?.alternativeText}
                                         previewUrl={item.product.image?.previewUrl}
                                     />
                                 </a>
