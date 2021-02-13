@@ -98,8 +98,17 @@ const ProductPage: NextPage<{ product: Product, page: Page }> = ({ product }) =>
         <div className={classes.root}>
             <Hero hero={heroSection}>
                 <div className={classes.buttonContainer}>
-                    <Button onClick={handleAddToCart} _color='light'>
-                        Add to Cart
+                    <Button
+                        isDisabled={!product.availible}
+                        onClick={handleAddToCart}
+                        _color='light'
+                        trackingEvent={{
+                            category: 'Interaction',
+                            action: 'Added to cart ' + product.identifier,
+                            label: 'Cart'
+                        }}
+                    >
+                        {product.availible ? 'Add to Cart' : 'Out of stock'}
                     </Button>
                 </div>
             </Hero>

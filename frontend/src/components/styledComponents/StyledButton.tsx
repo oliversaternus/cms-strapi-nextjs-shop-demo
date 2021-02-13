@@ -13,6 +13,7 @@ interface StyledIputProps extends ButtonProps {
     link?: string;
     trackingEvent?: TrackingEvent;
     target?: '_self' | '_blank';
+    isDisabled?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -90,11 +91,24 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
     rounded: {
         borderRadius: 24
+    },
+    disabledContainer: {
+        opacity: 0.5,
+        cursor: 'normal',
+        position: 'relative'
+    },
+    disabledOverlay: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'transparent'
     }
 }));
 
 const StyledButton: React.FC<StyledIputProps> = (props) => {
-    const { className, style, children, _color, trackingEvent, link, onClick, ...others } = props;
+    const { className, style, children, _color, trackingEvent, link, onClick, isDisabled, ...others } = props;
     const classes = useStyles();
 
     const hasClicked = useCallback((event: React.MouseEvent<any, MouseEvent>) => {
@@ -105,6 +119,17 @@ const StyledButton: React.FC<StyledIputProps> = (props) => {
 
         onClick?.(event);
     }, [onClick, trackingEvent]);
+
+    if (isDisabled) {
+        return (
+            <div className={clsx(classes.root, classes.disabledContainer)}>
+                <Button className={clsx(classes.root, _color && classes[_color], className)} variant='contained' {...others}>
+                    {children}
+                </Button>
+                <div className={classes.disabledOverlay}></div>
+            </div>
+        );
+    }
 
     if (link && (link.startsWith('/'))) {
         return (

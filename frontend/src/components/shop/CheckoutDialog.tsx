@@ -1,7 +1,7 @@
 import React, { useState, useContext, useMemo, useCallback } from 'react';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import Dialog from '../styledComponents/StyledDialog';
-import { Button, useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from '@material-ui/core';
 import { parse } from 'marked';
 import { Order } from '../../tools/Models';
 import { ShopContext } from '../../contexts/ShopContext';
@@ -11,11 +11,12 @@ import StyledInput from '../styledComponents/StyledInput';
 import ReCAPTCHA from "react-google-recaptcha";
 import { IntegrationsContext } from '../../contexts/IntegrationsContext';
 import { validate } from 'email-validator';
+import Button from '../styledComponents/StyledButton';
 
 const useStyles = makeStyles(() =>
     createStyles({
         root: {
-            display: 'flex',
+            display: 'flex', 
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'flex-start',
@@ -202,7 +203,17 @@ const CheckoutDialog: React.FC<{ message?: string; open: boolean; onClose: () =>
                         </div>}
                 </div>
                 <div className={classes.buttonsContainer}>
-                    <Button className={classes.button} variant="contained" color="secondary" onClick={sendOrder}>Submit</Button>
+                    <Button
+                        className={classes.button}
+                        variant="contained"
+                        color="secondary"
+                        onClick={sendOrder}
+                        trackingEvent={{
+                            category: 'Interaction',
+                            action: 'Order placed',
+                            label: 'Cart'
+                        }}
+                    >Submit</Button>
                 </div>
             </div>
         </Dialog>

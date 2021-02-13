@@ -167,7 +167,7 @@ const Contact: React.FC<ContactProps> = (props) => {
         firstName: '',
         lastName: '',
         salutation: 'No salutation',
-        email: '', 
+        email: '',
         content: '',
         subject: 'contact'
     });
@@ -294,7 +294,17 @@ const Contact: React.FC<ContactProps> = (props) => {
                             </div>}
                     </div>
                     <div className={classes.buttonsContainer}>
-                        <Button className={classes.button} variant="contained" color="secondary" onClick={sendMessage}>Send</Button>
+                        <Button
+                            className={classes.button}
+                            variant="contained"
+                            color="secondary"
+                            onClick={sendMessage}
+                            trackingEvent={{
+                                category: 'Interaction',
+                                action: 'Message sent ' + (contact.identifier ? ' #' + contact.identifier : ''),
+                                label: 'Send'
+                            }}
+                        >Send</Button>
                     </div>
                 </div>
             </Dialog>
