@@ -167,7 +167,7 @@ const Contact: React.FC<ContactProps> = (props) => {
         firstName: '',
         lastName: '',
         salutation: 'No salutation',
-        email: '',
+        email: '', 
         content: '',
         subject: 'contact'
     });
