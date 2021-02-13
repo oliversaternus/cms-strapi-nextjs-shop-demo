@@ -1,14 +1,16 @@
 import React, { useCallback, useState, useContext } from "react";
 import clsx from "clsx";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
+import { Theme, useMediaQuery } from "@material-ui/core";
 import { Message, ContactSection } from '../../tools/Models';
 import { createMessage } from '../../tools/Service';
 import { NotificationContext } from '../../contexts/NotificationContext';
 import StyledInput from '../styledComponents/StyledInput';
 import StyledDatePicker from '../styledComponents/StyledDatePicker';
 import Button from '../styledComponents/StyledButton';
+import ReCAPTCHA from "react-google-recaptcha";
 import { validate } from 'email-validator';
+import { IntegrationsContext } from "../../contexts/IntegrationsContext";
 
 interface ContactProps {
     contact: ContactSection;
@@ -68,6 +70,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     sendButton: {
         marginTop: 12
     },
+    captchaContainer: {
+        marginTop: 8,
+    },
     '@media (max-width: 1000px)': {
         textContent: {
             width: '100%'
@@ -96,7 +101,10 @@ const Contact: React.FC<ContactProps> = (props) => {
         content: '',
         subject: 'contact'
     });
+    const [captchaCode, setCaptchaCode] = useState('');
     const { openNotification } = useContext(NotificationContext);
+    const { captcha } = useContext(IntegrationsContext);
+    const tinyScreen = useMediaQuery('(max-width: 320px)');
 
     const sendMessage = useCallback(async () => {
         if (!validate(message.email)) {
@@ -107,7 +115,11 @@ const Contact: React.FC<ContactProps> = (props) => {
             openNotification('error', 'Pleas fill all fields.');
             return;
         }
-        const response = await createMessage(message);
+        if (captcha?.enabled && !captchaCode) {
+            openNotification('error', 'Please solve the captcha');
+            return;
+        }
+        const response = await createMessage(message, captchaCode);
         if (response.isError) {
             openNotification('error', 'Message sending error');
             return;
@@ -121,7 +133,7 @@ const Contact: React.FC<ContactProps> = (props) => {
             subject: 'contact'
         });
         openNotification('success', 'Message sent!');
-    }, [message, validate, openNotification]);
+    }, [message, captchaCode, validate, openNotification]);
 
     return (
         <div
@@ -157,6 +169,15 @@ const Contact: React.FC<ContactProps> = (props) => {
                     value={message?.content}
                     onChange={(e) => setMessage({ ...message, content: e.target?.value })}
                 />
+                {captcha.enabled &&
+                    <div className={classes.captchaContainer}>
+                        <ReCAPTCHA
+                            size={tinyScreen ? 'compact' : 'normal'}
+                            key={tinyScreen + ''}
+                            sitekey={captcha.publicKey || ''}
+                            onChange={(token) => setCaptchaCode(token || '')}
+                        />
+                    </div>}
                 <Button
                     _color='primary'
                     className={classes.sendButton}
