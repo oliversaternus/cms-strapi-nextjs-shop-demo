@@ -2,7 +2,7 @@ import React, { useMemo, useEffect, useContext, useCallback } from 'react';
 import { NextPage } from 'next';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { getProduct } from '../../src/tools/Service';
-import { DocumentsSection, GallerySection, HeroSection, TextSection, Product } from '../../src/tools/Models';
+import { DocumentsSection, GallerySection, HeroSection, TextSection, Product, Page } from '../../src/tools/Models';
 import { CircularProgress } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { NotificationContext } from '../../src/contexts/NotificationContext';
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
+const ProductPage: NextPage<{ product: Product, page: Page }> = ({ product }) => {
     const { id, name, image, price, images, availible, documents, details } = product;
     const classes = useStyles();
     const { openNotification } = useContext(NotificationContext);
@@ -110,11 +110,17 @@ const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
     );
 }
 
-ProductPage.getInitialProps = async ({ query }): Promise<{ product: Product }> => {
+ProductPage.getInitialProps = async ({ query }): Promise<{ product: Product, page: Page }> => {
     const productResponse = await getProduct(query.identifier + '');
     const product: Product = (!productResponse.isError && productResponse.data) || { id: 0, name: '__empty' } as Product;
+    const page: Page = {
+        title: product.name,
+        description: product.description,
+        previewImageUrl: product.image?.formats?.medium?.url,
+        keywords: product.keywords
+    };
 
-    return { product };
+    return { product, page };
 }
 
 export default ProductPage;

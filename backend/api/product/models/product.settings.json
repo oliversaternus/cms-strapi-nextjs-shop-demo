@@ -57,6 +57,9 @@
     },
     "identifier": {
       "type": "string"
+    },
+    "keywords": {
+      "type": "string"
     }
   }
 }

@@ -88,9 +88,6 @@ function CustomApp(props: ExtendedAppProps) {
   }, [setIsLoading]);
 
   const getPageTitle = useCallback(() => {
-    if (pageProps?.page && pageProps.page.title && pageProps.page.subtitle) {
-      return `${pageProps.page.title} | ${pageProps.page.subtitle}`;
-    }
     if (pageProps?.page?.title) {
       return pageProps.page.title;
     }
@@ -105,12 +102,11 @@ function CustomApp(props: ExtendedAppProps) {
         {favicon && <link rel="icon" href={favicon?.url} />}
         <meta name="description" content={pageProps?.description || defaultMeta.description} />
         <meta name="keywords" content={pageProps?.keywords || defaultMeta.keywords} />
-        <meta name="author" content={pageProps?.author || defaultMeta.author} />
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
         <meta name="theme-color" content="#405166" />
         <meta property="og:title" content={getPageTitle()} />
         <meta property="og:description" content={pageProps?.description || defaultMeta.description} />
-        {previewImage && <meta property="og:image" content={previewImage?.url} />}
+        {previewImage && <meta property="og:image" content={pageProps.previewImageUrl || previewImage?.url} />}
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />

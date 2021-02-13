@@ -17,6 +17,8 @@ export type Page = {
     description?: string;
     keywords?: string;
     content?: PageContent[];
+    // property can be added in frontend
+    previewImageUrl?: string;
 };
 
 export type GlobalData = {
@@ -315,6 +317,7 @@ export type Integrations = {
 export type Product = {
     id: number;
     identifier?: string;
+    keywords?: string;
     name?: string;
     description?: string;
     image?: Image;

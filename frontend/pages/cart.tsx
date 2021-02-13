@@ -1,7 +1,7 @@
 import React, { useContext, useMemo, useCallback, useState } from 'react';
 import { NextPage } from 'next';
 import { createStyles, makeStyles, fade } from '@material-ui/core/styles';
-import { CartItem } from '../src/tools/Models';
+import { CartItem, Page } from '../src/tools/Models';
 import { ShopContext } from '../src/contexts/ShopContext';
 import Grid from '@material-ui/core/Grid';
 import Image from '../src/components/styledComponents/StyledImage';
@@ -245,6 +245,19 @@ const CartPage: NextPage<{}> = () => {
             </div>
             <CheckoutDialog open={checkoutOpen} onClose={handleCheckoutClose} message={checkoutMessage} />
         </div>);
+}
+
+export async function getStaticProps() {
+    const page: Page = {
+        title: 'Cart',
+        description: 'Your selected shopping items'
+    };
+
+    return {
+        props: {
+            page
+        },
+    }
 }
 
 export default CartPage;
