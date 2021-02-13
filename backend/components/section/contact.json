@@ -12,6 +12,9 @@
     },
     "headline": {
       "type": "string"
+    },
+    "confirmMessage": {
+      "type": "richtext"
     }
   }
 }

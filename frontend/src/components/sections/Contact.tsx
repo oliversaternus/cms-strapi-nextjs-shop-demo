@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useContext } from "react";
+import React, { useCallback, useState, useContext, useMemo } from "react";
 import clsx from "clsx";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { Theme, useMediaQuery } from "@material-ui/core";
@@ -6,11 +6,12 @@ import { Message, ContactSection } from '../../tools/Models';
 import { createMessage } from '../../tools/Service';
 import { NotificationContext } from '../../contexts/NotificationContext';
 import StyledInput from '../styledComponents/StyledInput';
-import StyledDatePicker from '../styledComponents/StyledDatePicker';
 import Button from '../styledComponents/StyledButton';
 import ReCAPTCHA from "react-google-recaptcha";
 import { validate } from 'email-validator';
 import { IntegrationsContext } from "../../contexts/IntegrationsContext";
+import Dialog from '../styledComponents/StyledDialog';
+import { parse } from 'marked';
 
 interface ContactProps {
     contact: ContactSection;
@@ -73,6 +74,75 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     captchaContainer: {
         marginTop: 8,
     },
+    message: {
+        paddingTop: 16,
+        paddingBottom: 8,
+        width: '100%',
+        maxWidth: 420,
+        '& h1': {
+            fontSize: 20,
+            fontWeight: 600
+        },
+        '& h2': {
+            fontSize: 20,
+            fontWeight: 600
+        },
+        '& h3': {
+            fontSize: 18,
+            fontWeight: 600
+        },
+        '& h4': {
+            fontSize: 18,
+            fontWeight: 600
+        },
+        '& h5': {
+            fontSize: 14,
+            fontWeight: 400
+        },
+        '& p': {
+            margin: 0,
+            fontSize: 14,
+            fontWeight: 400
+        },
+        '& ul': {
+            margin: 0,
+            paddingLeft: 18,
+            fontSize: 14,
+            fontWeight: 400
+        },
+        '& ol': {
+            margin: 0,
+            paddingLeft: 18,
+            fontSize: 14,
+            fontWeight: 400
+        },
+    },
+    buttonsContainer: {
+        paddingTop: 16,
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+    },
+    button: {
+        marginLeft: 16
+    },
+    confirmRoot: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        height: '100%',
+        width: '100%',
+    },
+    confirmContainer: {
+        width: '100%',
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        flexDirection: 'column',
+        padding: 12,
+    },
     '@media (max-width: 1000px)': {
         textContent: {
             width: '100%'
@@ -104,9 +174,16 @@ const Contact: React.FC<ContactProps> = (props) => {
     const [captchaCode, setCaptchaCode] = useState('');
     const { openNotification } = useContext(NotificationContext);
     const { captcha } = useContext(IntegrationsContext);
-    const tinyScreen = useMediaQuery('(max-width: 320px)');
+    const smallScreen = useMediaQuery('(max-width: 480px)');
+    const tinyScreen = useMediaQuery('(max-width: 370px)');
+    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+    const parsedConfirmMessage = useMemo(() => parse(contact.confirmMessage || ''), [contact, contact.confirmMessage]);
 
-    const sendMessage = useCallback(async () => {
+    const handleClose = () => {
+        setConfirmDialogOpen(false);
+    };
+
+    const handleOpen = () => {
         if (!validate(message.email)) {
             openNotification('error', 'Email is invalid');
             return;
@@ -115,8 +192,21 @@ const Contact: React.FC<ContactProps> = (props) => {
             openNotification('error', 'Pleas fill all fields.');
             return;
         }
+        setConfirmDialogOpen(true);
+    };
+
+    const sendMessage = useCallback(async () => {
         if (captcha?.enabled && !captchaCode) {
             openNotification('error', 'Please solve the captcha');
+            return;
+        }
+        handleClose();
+        if (!validate(message.email)) {
+            openNotification('error', 'Email is invalid');
+            return;
+        }
+        if (!message.firstName || !message.email || !message.lastName || !message.content) {
+            openNotification('error', 'Pleas fill all fields.');
             return;
         }
         const response = await createMessage(message, captchaCode);
@@ -169,19 +259,10 @@ const Contact: React.FC<ContactProps> = (props) => {
                     value={message?.content}
                     onChange={(e) => setMessage({ ...message, content: e.target?.value })}
                 />
-                {captcha.enabled &&
-                    <div className={classes.captchaContainer}>
-                        <ReCAPTCHA
-                            size={tinyScreen ? 'compact' : 'normal'}
-                            key={tinyScreen + ''}
-                            sitekey={captcha.publicKey || ''}
-                            onChange={(token) => setCaptchaCode(token || '')}
-                        />
-                    </div>}
                 <Button
                     _color='primary'
                     className={classes.sendButton}
-                    onClick={sendMessage}
+                    onClick={handleOpen}
                     trackingEvent={{
                         category: 'Interaction',
                         action: 'Clicked Send Contact Form' + (contact.identifier ? ' #' + contact.identifier : ''),
@@ -189,6 +270,34 @@ const Contact: React.FC<ContactProps> = (props) => {
                     }}
                 >Send</Button>
             </div >
+            <Dialog
+                title="Send Message"
+                open={confirmDialogOpen}
+                onClose={handleClose}
+                preventFullScreen={!smallScreen}
+                transition='slide'
+
+            >
+                <div className={classes.confirmRoot}>
+                    <div className={classes.confirmContainer}>
+                        <div className={classes.message} dangerouslySetInnerHTML={{ __html: parsedConfirmMessage }}>
+
+                        </div>
+                        {captcha.enabled &&
+                            <div className={classes.captchaContainer}>
+                                <ReCAPTCHA
+                                    size={tinyScreen ? 'compact' : 'normal'}
+                                    key={tinyScreen + ''}
+                                    sitekey={captcha.publicKey || ''}
+                                    onChange={(token) => setCaptchaCode(token || '')}
+                                />
+                            </div>}
+                    </div>
+                    <div className={classes.buttonsContainer}>
+                        <Button className={classes.button} variant="contained" color="secondary" onClick={sendMessage}>Send</Button>
+                    </div>
+                </div>
+            </Dialog>
         </div >
     );
 };

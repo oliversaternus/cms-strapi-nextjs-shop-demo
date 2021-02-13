@@ -244,6 +244,7 @@ export type ContactSection = {
     id: number;
     identifier?: string;
     headline?: string;
+    confirmMessage?: string;
 };
 
 export type GallerySection = {
