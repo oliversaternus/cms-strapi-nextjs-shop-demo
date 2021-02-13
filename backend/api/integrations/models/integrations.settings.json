@@ -14,17 +14,26 @@
     "Analytics": {
       "type": "component",
       "repeatable": false,
-      "component": "integrations.google-analytics"
+      "component": "integrations.google-analytics",
+      "required": true
     },
     "Chat": {
       "type": "component",
       "repeatable": false,
-      "component": "integrations.chat"
+      "component": "integrations.chat",
+      "required": true
     },
     "ReCaptcha": {
       "type": "component",
       "repeatable": false,
-      "component": "integrations.re-captcha"
+      "component": "integrations.re-captcha",
+      "required": true
+    },
+    "Notification": {
+      "type": "component",
+      "repeatable": false,
+      "component": "integrations.notification",
+      "required": true
     }
   }
 }

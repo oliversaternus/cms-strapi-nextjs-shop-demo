@@ -29,6 +29,25 @@ module.exports = {
         } else {
             entity = await strapi.services.message.create(ctx.request.body);
         }
+        if (
+            integrations.Notification &&
+            integrations.Notification.MessageReceived &&
+            integrations.Notification.NotifiedEmail
+        ) {
+            strapi.plugins['email'].services.email.send({
+                to: integrations.Notification.NotifiedEmail,
+                subject: `Message from ${entity.firstName} ${entity.lastName}`,
+                html: `
+              You received a new message from ${entity.firstName} ${entity.lastName}!<br/>
+              <br/>
+              Email:<br/>
+              ${entity.email}<br/>
+              <br/>
+              Content:<br/>
+              ${entity.content}<br/>
+            `,
+            });
+        }
         return sanitizeEntity(entity, { model: strapi.models.message });
     },
 };

@@ -30,14 +30,19 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const ProductPage: NextPage<{ product: Product }> = ({ product }) => {
-    const { id, name, description, image, price, images, availible, documents, details } = product;
+    const { id, name, image, price, images, availible, documents, details } = product;
     const classes = useStyles();
     const { openNotification } = useContext(NotificationContext);
     const { addToCart, shopCurrency } = useContext(ShopContext);
     const router = useRouter();
 
     const handleAddToCart = useCallback(() => {
-        const success = addToCart(product);
+        const success = addToCart({
+            id: product.id,
+            name: product.name,
+            image: product.image,
+            price: product.price
+        });
         if (!success) {
             openNotification('error', 'Maximum Quantity reached. Please contact us for custom order.');
             return;

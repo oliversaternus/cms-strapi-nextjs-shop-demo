@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_integrations_notifications",
+  "info": {
+    "name": "Notification",
+    "icon": "envelope-square"
+  },
+  "options": {},
+  "attributes": {
+    "MessageReceived": {
+      "type": "boolean"
+    },
+    "OrderReceived": {
+      "type": "boolean"
+    },
+    "NotifiedEmail": {
+      "type": "string"
+    }
+  }
+}
