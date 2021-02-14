@@ -13,6 +13,7 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { IconButton } from '@material-ui/core';
 import CheckoutDialog from '../src/components/shop/CheckoutDialog';
+import CartIcon from '../src/icons/CartIcon';
 
 const useStyles = makeStyles((theme) =>
     createStyles({
@@ -113,6 +114,7 @@ const useStyles = makeStyles((theme) =>
             fontSize: 18
         },
         emptyCartIcon: {
+            fill: theme.palette.componentStyles.shop?.main.textLight || theme.palette.componentStyles.shop?.main.text || theme.palette.text.primary,
             width: 64,
             height: 64
         },
@@ -195,7 +197,7 @@ const CartPage: NextPage<{}> = () => {
                     <div className={classes.cartTitle}>Cart<div className={classes.itemsCount}>{`${totalQuantity} items`}</div></div>
                     {!cartItems.length &&
                         <div className={classes.emptyCart}>
-                            <ShoppingCartOutlined className={classes.emptyCartIcon} />
+                            <CartIcon className={classes.emptyCartIcon} />
                             No items in cart
                         </div>}
                     {cartItems.map(item => (

@@ -15,6 +15,10 @@ module.exports = {
             delete entity.ReCaptcha.secret;
         }
 
+        if (entity.Notification) {
+            delete entity.Notification;
+        }
+
         return sanitizeEntity(entity, { model: strapi.models.integrations });
     },
 };

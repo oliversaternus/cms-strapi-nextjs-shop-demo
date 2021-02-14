@@ -17,7 +17,7 @@ export type Page = {
     description?: string;
     keywords?: string;
     content?: PageContent[];
-    // property can be added in frontend
+    // property is added in frontend
     previewImageUrl?: string;
 };
 
@@ -29,6 +29,7 @@ export type GlobalData = {
     copyright?: string;
     navigation?: NavigationArea;
     footer?: NavigationArea;
+    socialMedia?: SocialMediaItem[];
 };
 
 export type CookieConfig = {
@@ -42,6 +43,11 @@ export type CookieConfig = {
         info: string
     }>
 };
+
+export type SocialMediaItem = {
+    type: 'facebook' | 'instagram' | 'twitter' | 'linkedin' | 'email';
+    address: string;
+}
 
 export type Currency = 'Euro' | 'Dollar' | 'Pound' | 'Yen';
 

@@ -140,7 +140,7 @@ const CardItem: React.FC<CardsItemProps> = (props) => {
     const classes = useCardStyles();
     const parsedContent = useMemo(() => parse(item.content || ''), [item, item.content]);
     return (
-        <div className={classes.root}>
+        <section className={classes.root}>
             <div className={classes.container}>
                 {item.image && (item.variant === 'person' ?
                     <div className={classes.avatarContainer}>
@@ -164,7 +164,7 @@ const CardItem: React.FC<CardsItemProps> = (props) => {
                         {item.linkText}
                     </Button></div>}
             </div>
-        </div>
+        </section>
     );
 };
 

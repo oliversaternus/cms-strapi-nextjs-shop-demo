@@ -136,7 +136,7 @@ const Gallery: React.FC<GalleryProps> = (props) => {
     };
 
     return (
-        <div
+        <section
             style={style}
             className={clsx(classes.root, className)}
             id={gallery.identifier}
@@ -159,7 +159,7 @@ const Gallery: React.FC<GalleryProps> = (props) => {
                     </div>
                 )}
             </div >
-        </div >
+        </section>
     );
 };
 

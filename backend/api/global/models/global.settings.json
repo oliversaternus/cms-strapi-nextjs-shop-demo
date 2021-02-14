@@ -55,7 +55,12 @@
       "component": "navigation.nav-group"
     },
     "copyright": {
-      "type": "richtext"
+      "type": "text"
+    },
+    "socialMedia": {
+      "type": "component",
+      "repeatable": true,
+      "component": "navigation.social-media"
     }
   }
 }

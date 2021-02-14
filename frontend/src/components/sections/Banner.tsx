@@ -155,7 +155,7 @@ const Banner: React.FC<BannerProps> = (props) => {
     const parsedContent = useMemo(() => parse(banner.content || ''), [banner]);
 
     return (
-        <div className={clsx(classes.root, className)} id={banner.identifier}>
+        <section className={clsx(classes.root, className)} id={banner.identifier}>
             <div className={classes.container}>
                 <div className={classes.content} dangerouslySetInnerHTML={{ __html: parsedContent }}>
 
@@ -185,7 +185,7 @@ const Banner: React.FC<BannerProps> = (props) => {
                 />
             }
             <div className={classes.imageOverlay} />
-        </div>
+        </section>
     );
 };
 

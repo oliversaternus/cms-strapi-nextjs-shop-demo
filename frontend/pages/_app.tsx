@@ -39,7 +39,7 @@ interface ExtendedAppProps extends AppProps {
 
 function CustomApp(props: ExtendedAppProps) {
   const { Component, pageProps, documentCookies, globalData, integrations, cookieConfig, shopConfig } = props;
-  const { navigation, footer, logo, favicon, copyright, previewImage } = globalData;
+  const { navigation, footer, logo, favicon, copyright, previewImage, socialMedia } = globalData;
   const [isLoading, setIsLoading] = useState(false);
 
   const initialCookies = useMemo(() => {
@@ -147,6 +147,7 @@ function CustomApp(props: ExtendedAppProps) {
                   logoSrc={logo?.url}
                   columns={footer}
                   copyright={copyright}
+                  socialMedia={socialMedia}
                 />
                 <base target='_blank'></base>
               </ShopContextProvider>
@@ -181,8 +182,7 @@ CustomApp.getInitialProps = async (appContext: AppContext): Promise<{ documentCo
         links: products.map(product => ({
           id: product.id,
           link: product.name || '',
-          path: '/product/' + product.identifier,
-          imageUrl: product.image?.formats.thumbnail.url
+          path: '/product/' + product.identifier
         })).filter(link => link.id && link.link && link.path)
       },
       ...(globalData.navigation || [])

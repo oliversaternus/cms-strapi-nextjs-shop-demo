@@ -79,7 +79,7 @@ const Location: React.FC<LocationProps> = (props) => {
         })}`), [location]);
 
     return (
-        <div
+        <section
             style={style}
             className={clsx(classes.root, className)}
             id={location.identifier}
@@ -88,7 +88,7 @@ const Location: React.FC<LocationProps> = (props) => {
                 {location.headline && <div className={classes.headline}>{location.headline}</div>}
                 <iframe src={iframeURL} width="100%" height="400" frameBorder="0" scrolling="no" marginHeight={0} marginWidth={0} ></iframe>
             </div >
-        </div >
+        </section>
     );
 };
 

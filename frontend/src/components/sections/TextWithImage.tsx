@@ -128,7 +128,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     image: {
         height: 320,
         width: '100%',
-        boxShadow: '12px 12px 12px rgba(0,0,0,.4)',
+        // boxShadow: '12px 12px 12px rgba(0,0,0,.4)',
         borderRadius: 4,
         overflow: 'hidden'
     },
@@ -158,7 +158,7 @@ const TextWithImage: React.FC<TextWithImageProps> = (props) => {
     const classes = useStyles();
     const parsedContent = useMemo(() => parse(text.content || ''), [text]);
     return (
-        <div
+        <section
             style={style}
             className={clsx(classes.root, className)}
             id={text.identifier}
@@ -193,7 +193,7 @@ const TextWithImage: React.FC<TextWithImageProps> = (props) => {
                     }
                 </div>
             </div >
-        </div >
+        </section>
     );
 };
 

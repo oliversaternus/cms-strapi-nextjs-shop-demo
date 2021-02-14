@@ -150,7 +150,7 @@ const Hero: React.FC<HeroProps> = (props) => {
     const parallaxOffset = useParallaxOffset(rootRef, 84, 320);
 
     return (
-        <div
+        <section
             style={style}
             className={clsx(classes.root, className)}
             id={hero.identifier}
@@ -188,7 +188,7 @@ const Hero: React.FC<HeroProps> = (props) => {
                     <div className={classes.imageOverlay} />
                 </>
             }
-        </div >
+        </section>
     );
 };
 

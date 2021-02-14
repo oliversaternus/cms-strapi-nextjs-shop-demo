@@ -1,13 +1,15 @@
 import React, { useMemo } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Link from 'next/link';
-import { NavigationArea } from '../tools/Models';
+import { NavigationArea, SocialMediaItem } from '../tools/Models';
 import { parse } from 'marked';
+import SocialMediaIcon from '../icons/SocialMediaIcon';
 
 type FooterProps = {
     columns?: NavigationArea;
     logoSrc?: string;
     copyright?: string;
+    socialMedia?: SocialMediaItem[];
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -41,6 +43,15 @@ const useStyles = makeStyles((theme: Theme) =>
             alignItems: 'center',
             justifyContent: 'space-between',
             flexDirection: 'column'
+        },
+        socialMediaContainer: {
+            padding: 16,
+            maxWidth: 1080,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+            flexDirection: 'row'
         },
         column: {
             display: 'flex',
@@ -121,6 +132,19 @@ const useStyles = makeStyles((theme: Theme) =>
                 textDecoration: 'none'
             }
         },
+        socialMediaIcon: {
+            fill: theme.palette.componentStyles.footer?.text || theme.palette.text.primary,
+            height: 40,
+            width: 40,
+            borderRadius: 20,
+            transition: 'opacity 0.16s linear',
+            '&:hover': {
+                opacity: 0.6
+            }
+        },
+        socialMediaLink: {
+            margin: 4
+        },
         '@media (max-width: 800px)': {
             container: {
                 flexDirection: 'column',
@@ -130,7 +154,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const Footer: React.FC<FooterProps> = ({ columns, logoSrc, copyright }) => {
+const Footer: React.FC<FooterProps> = ({ columns, logoSrc, copyright, socialMedia }) => {
     const classes = useStyles();
     const parsedCopyright = useMemo(() => parse(copyright || ''), [copyright]);
     return (
@@ -150,6 +174,13 @@ const Footer: React.FC<FooterProps> = ({ columns, logoSrc, copyright }) => {
                         </ React.Fragment>
                     )}
                 </div>
+                {socialMedia &&
+                    <div className={classes.socialMediaContainer}>
+                        {socialMedia?.map(socialMediaItem =>
+                            <a key={socialMediaItem.address} href={socialMediaItem.address} className={classes.socialMediaLink}>
+                                <SocialMediaIcon type={socialMediaItem.type} className={classes.socialMediaIcon} />
+                            </a>)}
+                    </div>}
                 <div className={classes.subFooter}>
                     <img src={logoSrc} className={classes.logoImage} />
                     <div className={classes.copyright} dangerouslySetInnerHTML={{ __html: parsedCopyright }}></div>

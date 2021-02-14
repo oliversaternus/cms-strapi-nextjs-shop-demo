@@ -181,7 +181,7 @@ const Text: React.FC<TextProps> = (props) => {
     const classes = useStyles();
     const parsedContent = useMemo(() => parse(text.content || ''), [text]);
     return (
-        <div
+        <section
             style={style}
             className={clsx(classes.root, className)}
             id={text.identifier}
@@ -189,7 +189,7 @@ const Text: React.FC<TextProps> = (props) => {
             <div className={classes.container}>
                 <div className={classes.textContent} dangerouslySetInnerHTML={{ __html: parsedContent }} />
             </div >
-        </div >
+        </section>
     );
 };
 

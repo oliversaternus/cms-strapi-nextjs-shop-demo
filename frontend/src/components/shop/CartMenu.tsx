@@ -12,6 +12,7 @@ import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 import { formatCurrency } from '../../tools/Utils';
 import { useRouter } from 'next/router';
+import CartIcon from '../../icons/CartIcon';
 
 type CartMenuProps = {
     cartURL: string;
@@ -136,7 +137,7 @@ const CartMenu: React.FC<CartMenuProps> = ({ cartURL }) => {
         <React.Fragment>
             <IconButton ref={cartMenuRef} onClick={handleCartOpen}>
                 <Badge badgeContent={totalQuantity} color="secondary">
-                    <ShoppingCart className={classes.cartIcon} />
+                    <CartIcon className={classes.cartIcon} />
                 </Badge>
             </IconButton>
             <Popper open={cartMenuOpen && !isOnCart} anchorEl={cartMenuRef.current} role={undefined} transition disablePortal>
@@ -150,9 +151,7 @@ const CartMenu: React.FC<CartMenuProps> = ({ cartURL }) => {
                                 <div className={classes.cartPaperContent}>
                                     <div className={classes.cartTitle}>Shopping Cart</div>
                                     {cartItems.length === 0 &&
-                                        <div className={classes.cartEmpty}>
-                                            <ShoppingCartOutlined className={classes.cartEmptyIcon} /> No items in cart
-                                                        </div>}
+                                        <div className={classes.cartEmpty}>No items in cart</div>}
                                     {cartItems.map(cartItem => (
                                         <div key={cartItem.id} className={classes.cartItemContainer}>
                                             <Avatar

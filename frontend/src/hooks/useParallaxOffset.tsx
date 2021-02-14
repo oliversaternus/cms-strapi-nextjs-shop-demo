@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export default function useParallaxOffset(element: React.RefObject<HTMLElement>, maxTop = 48, maxBottom = 256, topCoeff = 0.48, bottomCoeff = 0.48) {
+export default function useParallaxOffset(element: React.RefObject<HTMLElement>, maxTop = 48, maxBottom = 256, topCoeff = 0.5, bottomCoeff = 0.5) {
     const [offset, setOffset] = useState(0);
 
     const calcOffset = useCallback(() => {

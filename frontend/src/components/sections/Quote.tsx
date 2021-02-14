@@ -99,7 +99,7 @@ const Quote: React.FC<QuoteProps> = (props) => {
     const classes = useStyles();
     const parsedContent = useMemo(() => parse(quote.content || ''), [quote, quote.content]);
     return (
-        <div
+        <section
             style={style}
             className={clsx(classes.root, className)}
             id={quote.identifier}
@@ -121,7 +121,7 @@ const Quote: React.FC<QuoteProps> = (props) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 

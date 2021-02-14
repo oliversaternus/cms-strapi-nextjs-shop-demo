@@ -226,7 +226,7 @@ const Contact: React.FC<ContactProps> = (props) => {
     }, [message, captchaCode, validate, openNotification]);
 
     return (
-        <div
+        <section
             style={style}
             className={clsx(classes.root, className)}
             id={contact.identifier}
@@ -308,7 +308,7 @@ const Contact: React.FC<ContactProps> = (props) => {
                     </div>
                 </div>
             </Dialog>
-        </div >
+        </section>
     );
 };
 

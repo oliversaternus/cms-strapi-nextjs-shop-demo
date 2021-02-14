@@ -121,7 +121,7 @@ const Documents: React.FC<DocumentsProps> = (props) => {
     }, []);
 
     return (
-        <div
+        <section
             style={style}
             className={clsx(classes.root, className)}
             id={documents.identifier}
@@ -155,7 +155,7 @@ const Documents: React.FC<DocumentsProps> = (props) => {
                     </div>
                 ))}
             </div>
-        </div>
+        </section>
     );
 };
 

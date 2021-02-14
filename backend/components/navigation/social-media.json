@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_navigation_social_medias",
+  "info": {
+    "name": "socialMedia",
+    "icon": "thumbs-up",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "address": {
+      "type": "string"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "facebook",
+        "instagram",
+        "twitter",
+        "linkedin",
+        "email"
+      ]
+    }
+  }
+}
